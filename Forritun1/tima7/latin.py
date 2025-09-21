@@ -19,3 +19,4 @@ for line in sys.stdin:
                 result.append(word[index:] + word[:index] + "ay")
 
     print(" ".join(result))
+

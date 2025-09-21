@@ -1,1 +1,2 @@
-https://ru.kattis.com/courses/T-111-PROG/PROG25/assignments/n5j9x5/problems/integerproperties?tab=submissions
+assignment 1 = https://ru.kattis.com/courses/T-111-PROG/PROG25/assignments/n5j9x5/problems/integerproperties?tab=submissions 
+assignment 2 = https://ru.kattis.com/courses/T-111-PROG/PROG25/assignments/mm99wm/problems/innvols?tab=submissions

@@ -1,7 +1,7 @@
 n = int(input())
 
 if n % 4 != 0:
-    print(False)
+    print("Neibb")
 
 elif n % 4 == 0:
     if n % 100 != 0:
@@ -10,4 +10,4 @@ elif n % 4 == 0:
         if n % 400 == 0:
             print(True)
         elif n % 400 != 0:
-            print(False)
+            print("Neibb")
