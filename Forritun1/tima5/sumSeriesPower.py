@@ -1,14 +1,14 @@
+k = int(input())
 n = int(input())
-count = int(input())
 sum = []
 
-for i in range(count):
-    number = int(input())
-    sum.append(number)
+for _ in range(n):
+    x = int(input())
+    sum.append(x)
 
 total = 0
-for number in sum:
-    total += n ** number
+for x in sum:
+    total += k ** x
 
 print(total)
   
