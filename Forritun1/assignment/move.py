@@ -11,12 +11,11 @@ def get_initial_position():
     """ here we are getting our number to put it on the list later on """
 
     number = 0
-    # if the input_number is less than 1 or more than 10 WE LOOOP!
     while number < 1 or number > LENGTH: 
         
         user_input = input(f"Position in [1..10]: ") 
         
-        if user_input.isdigit(): # This is just paranoia from tima12 daemi 4
+        if user_input.isdigit(): #paranoia from tima12 daemi 4
             number = int(user_input) 
             
         else:
@@ -24,7 +23,7 @@ def get_initial_position():
             
     return number - 1  # Here is -1 for the index otherwise we would start +1 
 
-def generate_display(current_index): # We take against the current index and put it inside
+def generate_display(current_index): 
     """ here we are creating the list of x with o """ 
 
     list_o_x = [CHAR_X] * LENGTH # here we are at xxxxxxxxxx
@@ -41,17 +40,19 @@ def run_game():
 
     while command == "r" or command == "l": 
         
-        current_view = generate_display(current_index) # We call our list with our current index
+        current_view = generate_display(current_index) 
         print(current_view)
         print("l: left")
         print("r: right")
-        command = input("Move: ").lower() # if input != r or q , we dipping GG (GOOD GAME)
+        command = input("Move: ").lower() 
+        #if input != r or q , we dipping GG (GOOD GAME)
 
         new_index = current_index 
         
         if command == 'r':
             # we move right unless we are at 10 (index 9)
-            if current_index < LENGTH - 1: # no -1 and we fried(we out of bounds basically) 
+            if current_index < LENGTH - 1: 
+                #no -1 we are fried(-1 is so that we dont go "outta bounds") 
                 new_index += 1  
         
         elif command == 'l': 
@@ -59,7 +60,8 @@ def run_game():
             if current_index > 0: # no problem here cause 0 not > 0
                 new_index -= 1 
                 
-        current_index = new_index # the new current(index) is now the current to update position
+        current_index = new_index 
+        #update position
 
 if __name__ == "__main__":
     run_game()

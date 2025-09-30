@@ -1,7 +1,7 @@
 k = int(input())
 n = int(input())
-sum = []
 
+sum = []
 for _ in range(n):
     x = int(input())
     sum.append(x)
@@ -11,5 +11,5 @@ for x in sum:
     total += k ** x
 
 print(total)
-  
+
 
