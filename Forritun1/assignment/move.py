@@ -23,7 +23,7 @@ def get_initial_position():
             
     return number - 1  # Here is -1 for the index otherwise we would start +1 
 
-def generate_display(current_index): 
+def generate_grid(current_index): 
     """ here we are creating the list of x with o """ 
 
     list_o_x = [CHAR_X] * LENGTH # here we are at xxxxxxxxxx
@@ -32,15 +32,15 @@ def generate_display(current_index):
     return "".join(list_o_x) 
 
 def run_game():
-    """ here we are running the game based on the rules provided by kattis """
+    """ here we are running the game"""
 
     current_index = get_initial_position() # call our function to get the number
     
-    command = 'r' # so we can start the while loop
+    command = 'r'
 
     while command == "r" or command == "l": 
         
-        current_view = generate_display(current_index) 
+        current_view = generate_grid(current_index) 
         print(current_view)
         print("l: left")
         print("r: right")
@@ -52,7 +52,7 @@ def run_game():
         if command == 'r':
             # we move right unless we are at 10 (index 9)
             if current_index < LENGTH - 1: 
-                #no -1 we are fried(-1 is so that we dont go "outta bounds") 
+                #no -1 we are fried (the -1 is so that we dont go "outta bounds") 
                 new_index += 1  
         
         elif command == 'l': 

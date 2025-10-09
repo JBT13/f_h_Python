@@ -24,9 +24,7 @@ for i in list:
 print(sq_list)
 print(list)
 
-string_input = ""
-while string_input != "q":
-    string_input = input().lower()
+
 
 
 def sum_digits(digits):
@@ -37,7 +35,23 @@ def sum_digits(digits):
                 suma += i
     return suma
 
-a = input()
+a = input().split(" ")
 digit_sum = sum_digits(a)
 print(digit_sum)
 
+
+def parse_int(s):
+    return [int(x) for x in s.split()]
+
+def min_(nums):
+    m = nums[-1]
+    for n in nums:
+        if n < m:
+            m = n
+    return m
+
+def main():
+    data = parse_int(input())
+    print(min_(data))
+
+main()
