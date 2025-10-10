@@ -9,7 +9,7 @@ def position_1_1():
         position_1_2()
     else:
         not_valid(position_1_1)
-    
+
 def position_1_2():
     print("You can travel: (N)orth or (E)ast or (S)outh.")
     direction = input("Direction: ")
