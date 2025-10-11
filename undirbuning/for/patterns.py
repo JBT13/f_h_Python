@@ -16,8 +16,8 @@ for i in range(1,m+1):
     print()
 
 ## Left angled triangle
-l = int(input())
-for i in range(l,0,-1):
+
+for i in range(m-1,0,-1):
     for j in range(i):
         print("*", end="")
     print()
