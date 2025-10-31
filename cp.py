@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
 
-date_time = datetime(2025, 11, 10, 10, 5)
+date_time = datetime(2025, 11, 21, 10, 5)
 we_out = datetime(2028, 5, 10, 10,5)
 
 def countdown(target_dt):
