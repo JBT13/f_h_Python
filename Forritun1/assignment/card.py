@@ -6,35 +6,30 @@ class Card:
             self.rank = rank
 
         elif type(rank) is str:
-            if rank == "11":
-                rank = "J"
+            rank_dic = {'A': 14, 'K': 13, 'Q': 12, 'J': 11,
+                        '14': 14, '13': 13, '12': 12, '11': 11}
             
-            elif rank == "12":
-                rank = "Q"
-
-            elif rank == "13":
-                rank = "K"
-            
-            elif rank == "14":
-                rank = "A"
-            
+            if rank.upper() in rank_dic:
+                self.rank = rank_dic[rank.upper()]
             else: 
                 self.rank = int(rank)
 
                     
     def __str__(self):
-        return f" {self.rank}{self.suit}"
-    
+        if self. rank == 14:
+            rank_str = "A"
 
-# class Card:
-#     def __init__(self, rank: int, suit):
-#         self.suit = suit 
+        elif self. rank == 13:
+            rank_str = "K"
 
-#         if type(rank) is int:
-#             self.rank = rank
+        elif self. rank == 12:
+            rank_str = "Q"
         
-#         elif type(rank) is str:
-#             self.rank = rank
-            
-#     def __str__(self):
-#         return f" {self.rank}{self.suit}"
+        elif self. rank == 11:
+            rank_str = "J"
+        
+        else:
+            rank_str = str(self.rank)
+
+        return f" {rank_str}{self.suit}"
+    
