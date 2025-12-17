@@ -2,3 +2,4 @@ assignment 1 = https://ru.kattis.com/courses/T-111-PROG/PROG25/assignments/n5j9x
 assignment 2 = https://ru.kattis.com/courses/T-111-PROG/PROG25/assignments/mm99wm/problems/innvols?tab=submissions
 assignment 3 = https://ru.kattis.com/courses/T-111-PROG/PROG25/assignments/ffj662/submissions/18298915
 assignment 4 = https://ru.kattis.com/courses/T-111-PROG/PROG25/assignments/v659ty/submissions/18523306
+assignment 5 = https://ru.kattis.com/courses/T-111-PROG/PROG25/assignments/em2d8o/submissions/18612232
