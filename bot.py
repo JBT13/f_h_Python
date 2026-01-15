@@ -1,6 +1,9 @@
 import discord
 import requests
 import json
+import os
+
+
 
 def get_meme():
   response = requests.get('https://meme-api.com/gimme')
@@ -79,4 +82,7 @@ intents.message_content = True
 intents.members = True
 
 client = MyClient(intents=intents)
-client.run("MTQ1MDk2Mjg1MTA3MzM2NDIwMA.GGhVGi.o5dUBYskqDjbBqdS_ymPFIWfLSyxFT1cSn4ZgM")
+
+token = os.getenv("MTQ1MDk2Mjg1MTA3MzM2NDIwMA.GGhVGi.o5dUBYskqDjbBqdS_ymPFIWfLSyxFT1cSn4ZgM")
+client.run(token)
+
