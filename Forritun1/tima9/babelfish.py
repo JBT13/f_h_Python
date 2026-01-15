@@ -25,6 +25,8 @@ import sys
 translator = {}
 
 # Reads all lines from standard input and builds the translator dictionary
+
+
 lines = sys.stdin.readlines()
 
 # Find the empty line that separates the two sections of input
