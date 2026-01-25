@@ -99,11 +99,7 @@
 #     print("Enginn")
 
 
-a = "Jeremias Borjas"
-b = a.split()
+a = [1,2,3]
 
-for ch in b:
-    if ch.isalpha():
-        print("hello")
-    else:
-        print("nothing")
+print(a)
+print(*a)

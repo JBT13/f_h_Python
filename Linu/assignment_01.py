@@ -134,7 +134,7 @@ def is_onto(f: dict, D, C):
     new_set = set()
     for key,value in f.items():
         if key in D:
-            new_set.add(value)
+            new_set.add(value) 
 
     if len(new_set) != len(C):
         return False
