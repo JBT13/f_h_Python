@@ -125,7 +125,7 @@ def find_average_record(sen_set, voting_dict:dict):
     Output: a vector containing the average components of the voting records
             of the senators in the input set
     Example: 
-        >>> voting_dict = {'Klein': [-1,0,1], 'Fox-Epstein': [-1,-1,-1], 'Ravella': [0,0,1]}
+        >>> voting_dict = {'Klein': [-1,0,110000000], 'Fox-Epstein': [-1,-1,-1], 'Ravella': [0,0,1]}
         >>> senators = {'Fox-Epstein','Ravella'}
         >>> find_average_record(senators, voting_dict)
         [-0.5, -0.5, 0.0]
@@ -164,19 +164,19 @@ def bitter_rivals(voting_dict: dict):
         True
     """
 
-    for name, value in voting_dict.items():
-        voting_dict[name] = sum(value)
+    min_score = float(10000000) #cheating highkey
+    rival_pair = ()
 
-    top = max(voting_dict.values())
-    bottom = min(voting_dict.values())
+    for name in voting_dict:
+        rival = least_similar(name, voting_dict)
+        score = policy_compare(name, rival, voting_dict)
 
-    ls = []
-    for name2, value2 in voting_dict.items():
-        if value2 == top or value2 == bottom:
-            ls.append(name2)
+        if score < min_score:
+            min_score = score
+            rival_pair = (name, rival) 
 
-    return tuple(ls)
-
+    return rival_pair
+    
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

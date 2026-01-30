@@ -99,7 +99,84 @@
 #     print("Enginn")
 
 
-a = [1,2,3]
+# a = input()
 
-print(a)
-print(*a)
+# r = ""
+
+# for i in range(len(a)-1,-1,-1):
+#     r += a[i]
+    
+# if r == a:
+#     print("Palindrome")
+
+# else:
+#     print("Nothing special about this string :(")
+    
+# a = int(input())
+
+# b = input().split()
+
+# ls = []
+# for i in b:
+#     ls.append(int(i))
+
+# op = max(ls)
+# lo = min(ls)
+# print(op, lo)
+
+# def sume(n):
+#     if n == 0:
+#         return 1
+    
+#     p = 1
+#     num = n
+#     while n > p:
+#         num += (n-p)
+#         p += 1 
+
+#     return num
+
+# a = int(input())
+
+# ls = []
+# for i in range(a):
+#     a,b = map(int, input().split())
+#     ls.append(b)
+
+# for i in range(0,len(ls)):
+#     print(f"{i+1} {sume(ls[i])+ls[i]}")
+
+n = int(input())
+my_d = {}
+
+for i in range(1,n+1):
+    my_d[i] = 0 
+
+
+for i in range((n//2)+1):
+    a,b = map(int, input().split()) 
+    my_d[a] += 1    
+    my_d[b] += 1
+
+ls = []
+
+for index, value in my_d.items():
+    if value == 2:
+        ls.append(index)
+
+x = 0
+y = 0
+        
+if ls[0] > ls[-1]:
+    x = ls[-1]   
+    y = ls[0]
+
+else:
+    x = ls[0]
+    y = ls[-1]
+
+print(x, y)
+
+
+
+
