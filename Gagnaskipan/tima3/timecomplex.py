@@ -31,7 +31,6 @@ def mul_pos(a:int, b:int) -> int:
 
 def min_number(list_n: list[int]) -> int:
     min_number = list_n[0]
-
     for i in range(len(list_n)):
         if min_number > list_n[i]:
             min_number = list_n[i]

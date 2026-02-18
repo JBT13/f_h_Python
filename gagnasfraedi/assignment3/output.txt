@@ -1,0 +1,69 @@
+ min  
+------
+ 2000
+(1 row)
+
+ count 
+-------
+     1
+(1 row)
+
+ count 
+-------
+   140
+(1 row)
+
+ count 
+-------
+    20
+(1 row)
+
+         name         | Average Rating 
+----------------------+----------------
+ Vocal Technique      |              8
+ Electric Guitar      |              8
+ DJ Mixing            |              8
+ Chamber Music        |              8
+ Bass Guitar          |              8
+ Advanced Piano       |              8
+ Piano Fundamentals   |              8
+ Jazz Improvisation   |              8
+ Choir Practice       |              8
+ String Ensemble      |              7
+ Orchestra Rehearsal  |              7
+ Drum Kit Training    |              7
+ Beginner Violin      |              7
+ Music Theory         |              7
+ Wind Ensemble        |              7
+ Songwriting Workshop |              7
+ Music Production     |              7
+ Electronic Music Lab |              7
+ Percussion Ensemble  |              7
+ Acoustic Guitar      |              6
+(20 rows)
+
+ count 
+-------
+   541
+(1 row)
+
+ count 
+-------
+    48
+(1 row)
+
+ count 
+-------
+   297
+(1 row)
+
+ count 
+-------
+    50
+(1 row)
+
+ id |        name        | sum  
+----+--------------------+------
+ 33 | Asdis Petursdottir | 1215
+(1 row)
+

@@ -146,37 +146,116 @@
 # for i in range(0,len(ls)):
 #     print(f"{i+1} {sume(ls[i])+ls[i]}")
 
-n = int(input())
-my_d = {}
+# n = int(input())
+# my_d = {}
 
-for i in range(1,n+1):
-    my_d[i] = 0 
+# for i in range(1,n+1):
+#     my_d[i] = 0 
 
 
-for i in range((n//2)+1):
-    a,b = map(int, input().split()) 
-    my_d[a] += 1    
-    my_d[b] += 1
+# for i in range((n//2)+1):
+#     a,b = map(int, input().split()) 
+#     my_d[a] += 1    
+#     my_d[b] += 1
 
-ls = []
+# ls = []
 
-for index, value in my_d.items():
-    if value == 2:
-        ls.append(index)
+# for index, value in my_d.items():
+#     if value == 2:
+#         ls.append(index)
 
-x = 0
-y = 0
+# x = 0
+# y = 0
         
-if ls[0] > ls[-1]:
-    x = ls[-1]   
-    y = ls[0]
+# if ls[0] > ls[-1]:
+#     x = ls[-1]   
+#     y = ls[0]
 
-else:
-    x = ls[0]
-    y = ls[-1]
+# else:
+#     x = ls[0]
+#     y = ls[-1]
 
-print(x, y)
+# print(x, y)
 
 
+# def hello(n):
+#     print(n+1)
 
+# print(hello(2))
+
+# n = int(input())
+
+# a = input()
+
+# count = 0
+# count1 = 0
+# count2 = 0
+
+# for i in a:
+#     if i == "G":
+#         count += 1
+
+#     if i == "A":
+#         count1 += 1
+
+#     if i == "D":
+#         count2 += 1
+
+# print((count/(n-count2))*100)
+
+
+# n = int(input())
+
+# k = 0
+# i = 0
+# while (2<<i) <= n:
+#         k += 1
+#         i += 1
+
+# print(k)
+
+# n = 5
+# for i in range(n):
+#     for j in range(i):
+#         print(i,j)
+
+# def binco(n):
+    
+#     return binco(n-1)
+
+# a = [10,20,40,30]
+# ls = []
+# count = 0 
+# for i in range(len(a)):
+#     ls.append(a[i]+count)
+#     count += a[i]
+
+# print(ls)
+
+# ls = [[1,2]] * 3
+# ls[0][1] = 3
+# print(ls)
+
+# from collections import deque
+
+# d = deque([20,50,40], maxlen=4)
+# print(d)
+# d.append(10)
+# print(d)
+# d.appendleft(30)
+# print(d)
+# d.pop()
+# print(d)
+# d.popleft()
+# print(d)
+
+def twoSum(nums: List[int], target: int) -> List[int]:
+    ls = []
+    for i in range(len(nums)):
+        for j in range(len(nums)):
+            if nums[i] + nums[j] == target:
+                ls.append(i)
+                ls.append(j)
+                return ls
+    
 

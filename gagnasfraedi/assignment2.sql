@@ -1,153 +1,168 @@
-CREATE DATABASE "assignement2Database";
+CREATE DATABASE "helloworld";
 
-CREATE TABLE Discipline (
-    id INTEGER PRIMARY KEY,
+
+CREATE TABLE sponsee (
+    id INT PRIMARY KEY,
+    grant_amount DECIMAL(10, 2) NOT NULL
+);
+
+
+CREATE TABLE member (
+    id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    popularity INTEGER NOT NULL,
-    CONSTRAINT discipline_pop CHECK (popularity IN (1,2,3,4,5,6,7,8,9,10))
+    username VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
+
 );
 
-CREATE TABLE Coach(
-    id INTEGER PRIMARY KEY,
-    phone VARCHAR(100) UNIQUE,
-    availabity_hour VARCHAR(100),
-    bank VARCHAR(100),
-    ledger VARCHAR(100),
-    account_number VARCHAR(100)
+
+CREATE TABLE trainee (
+    member_id INT PRIMARY KEY,
+    last_login_date DATE NOT NULL,
+    fitness_level INT NOT NULL,
+    sponsee_id INT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (sponsee_id) REFERENCES sponsee(id)
 );
 
-CREATE TABLE Program(
-    id INTEGER PRIMARY KEY,
+
+CREATE TABLE coach (
+    member_id INT PRIMARY KEY,
+    avail_hours VARCHAR(100) NOT NULL,
+    phone VARCHAR(30) UNIQUE NOT NULL,
+    bank VARCHAR(100) NOT NULL,
+    ledger VARCHAR(100) NOT NULL,
+    account_number VARCHAR(100) NOT NULL,
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE discipline (
+    id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    rank INT NOT NULL,
+    CONSTRAINT chk_rank CHECK (rank BETWEEN 1 AND 10)
+);
+
+
+CREATE TABLE program (
+    id INT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     start_date DATE NOT NULL,
-    level INTEGER,
-    Dis_id INTEGER,
-    Coh_id INTEGER,
-    FOREIGN KEY (Dis_id) REFERENCES Discipline(id),
-    FOREIGN KEY (Coh_id) REFERENCES Coach(id)
+    level INT NOT NULL,
+    discipline_id INT NOT NULL,
+    coach_id INT NOT NULL,
+    FOREIGN KEY (discipline_id) REFERENCES discipline (id),
+    FOREIGN KEY (coach_id) REFERENCES coach (member_id)
 );
 
-CREATE TABLE Component(
-    id INTEGER PRIMARY KEY,
-    name VARCHAR(100)
-);
 
-CREATE TABLE PRM_HAS_CMP(
-    Prm_id INTEGER,
-    Cmp_id INTEGER,
-    PRIMARY KEY (Prm_id, Cmp_id),
-    FOREIGN KEY (Prm_id) REFERENCES Program(id),
-    FOREIGN KEY (Cmp_id) REFERENCES Component(id)
-);
-
-CREATE TABLE Member(
-    id INTEGER PRIMARY KEY,
-    name VARCHAR(100),
-    username VARCHAR(100) UNIQUE,
-    email VARCHAR(100) UNIQUE
-);
-
-CREATE TABLE Sponsee(
+CREATE TABLE component (
     id INT PRIMARY KEY,
-    grant_ammount INTEGER
+    name VARCHAR(100) NOT NULL,
+    program_id INT NOT NULL,
+    FOREIGN KEY (program_id) REFERENCES program (id) ON DELETE CASCADE
 );
 
-CREATE TABLE Trainee(
-    id INTEGER PRIMARY KEY,
-    last_login DATE,
-    level INTEGER,
-    Spo_id INT NULL,
-    FOREIGN KEY (Spo_id) REFERENCES Sponsee(id)
+
+CREATE TABLE workout (
+    component_id INT PRIMARY KEY,
+    intensity_lvl INT NOT NULL,
+    duration TIME NOT NULL,
+    FOREIGN KEY (component_id) REFERENCES component (id) ON DELETE CASCADE
 );
 
-CREATE TABLE Workout(
-    id INTEGER PRIMARY KEY,
-    intensity_lvl VARCHAR(100),
-    duration TIME,
-    FOREIGN KEY (id) REFERENCES Component(id)
+
+CREATE TABLE fittest (
+    component_id INT PRIMARY KEY,
+    test_date DATE NOT NULL,
+    duration TIME NOT NULL,
+    FOREIGN KEY (component_id) REFERENCES component (id) ON DELETE CASCADE
 );
 
-CREATE TABLE FitTest(
-    id INTEGER PRIMARY KEY,
-    "date" DATE,
-    duration TIME,
-    FOREIGN KEY (id) REFERENCES Component(id)
+
+CREATE TABLE task (
+    fittest_id INT,
+    task_number INT,
+    intensity_lvl INT NOT NULL,
+    description VARCHAR(100) NOT NULL,
+    PRIMARY KEY (fittest_id, task_number),
+    FOREIGN KEY (fittest_id) REFERENCES fittest (component_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Task(
-    number INTEGER,
-    intensity_lvl VARCHAR(100),
-    duration TIME,
-    fit_test_id INTEGER NOT NULL,
-    PRIMARY KEY(number, fit_test_id),
 
-    FOREIGN KEY (fit_test_id) REFERENCES FitTest(id)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE Crew(
-    id INTEGER PRIMARY KEY,
-    name VARCHAR(100),
+CREATE TABLE crew (
+    id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
     address VARCHAR(100),
-    Dis_id INT NOT NULL,
-    Spo_id INT NULL,
-    FOREIGN KEY (Dis_id) REFERENCES Discipline(id),
-    FOREIGN KEY (Spo_id) REFERENCES Sponsee(id)
+    discipline_id INT NULL,
+    sponsee_id INT NULL,
+    FOREIGN KEY (discipline_id) REFERENCES discipline (id) ON DELETE SET NULL,
+    FOREIGN KEY (sponsee_id) REFERENCES sponsee(id)
+
 );
 
-CREATE TABLE Reviews(
-    Coh_id INTEGER,
-    Tra_id INTEGER,
-    stars INTEGER,
-    PRIMARY KEY(Coh_id, Tra_id),
-    FOREIGN KEY (Coh_id) REFERENCES Coach(id),
-    FOREIGN KEY (Tra_id) REFERENCES Trainee(id),
-    CONSTRAINT stars_selec CHECK (stars IN (1,2,3,4,5))
-);
 
-CREATE TABLE Follows(
-    flw_id INTEGER,
-    flwer_id INTEGER,
-    PRIMARY KEY (flw_id, flwer_id),
-    FOREIGN KEY (flw_id) REFERENCES Trainee(id),
-    FOREIGN KEY (flwer_id) REFERENCES Trainee(id)
-);
 
-CREATE TABLE Enrolled_in(
-    Tra_id INTEGER,
-    Prm_id INTEGER,
-    PRIMARY KEY (Tra_id, Prm_id),
-    FOREIGN KEY (Tra_id) REFERENCES Trainee(id),
-    FOREIGN KEY (Prm_id) REFERENCES Program(id)
-);
+-- Relations
 
-CREATE TABLE Completes(
-    Tra_id INTEGER,
-    Prm_id INTEGER,
-    Cmp_id INTEGER,
-    avg_HR INTEGER,
-    max_HR INTEGER,
-    PRIMARY KEY (Tra_id, Prm_id, Cmp_id),
-    FOREIGN KEY (Tra_id, Prm_id) REFERENCES Enrolled_in(Tra_id, Prm_id),
-    FOREIGN KEY (Cmp_id) REFERENCES Component(id)
-);
 
-CREATE TABLE IsPartOf(
-    Tra_id INTEGER,
-    Crew_id INTEGER,
-    PRIMARY KEY (Tra_id, Crew_id),
-    FOREIGN KEY (Tra_id) REFERENCES Trainee(id),
-    FOREIGN KEY (Crew_id) REFERENCES Crew(id)
-);
-
-CREATE TABLE Nominates(
+CREATE TABLE nominates (
+    coach_id INT,
+    sponsee_id INT,
     year INT NOT NULL,
-    Spo_id INT,
-    Coh_id INT,
-    PRIMARY KEY (year,Spo_id,Coh_id),
-    FOREIGN KEY (Spo_id) REFERENCES Sponsee(id),
-    FOREIGN KEY (Coh_id) REFERENCES Coach(id)
+    PRIMARY KEY (coach_id, sponsee_id, year),
+    FOREIGN KEY (coach_id) REFERENCES coach (member_id) ON DELETE CASCADE,
+    FOREIGN KEY (sponsee_id) REFERENCES sponsee (id) ON DELETE CASCADE
 );
 
 
+CREATE TABLE follows (
+    follower_id INT,
+    follows_id INT,
+    PRIMARY KEY (follower_id, follows_id),
+    FOREIGN KEY (follower_id) REFERENCES trainee (member_id) ON DELETE CASCADE,
+    FOREIGN KEY (follows_id) REFERENCES trainee (member_id) ON DELETE CASCADE
+);
 
+
+CREATE TABLE crew_members (
+    crew_id INT,
+    trainee_id INT,
+    PRIMARY KEY (crew_id, trainee_id),
+    FOREIGN KEY (crew_id) REFERENCES crew (id) ON DELETE CASCADE,
+    FOREIGN KEY (trainee_id) REFERENCES trainee (member_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE reviews (
+    review_id INT PRIMARY KEY,
+    trainee_id INT NOT NULL,
+    coach_id INT NOT NULL,
+    stars INT NOT NULL,
+    FOREIGN KEY (trainee_id) REFERENCES trainee (member_id) ON DELETE CASCADE,
+    FOREIGN KEY (coach_id) REFERENCES coach (member_id) ON DELETE CASCADE,
+    CONSTRAINT check_no_self_review CHECK (trainee_id <> coach_id)
+);
+
+
+CREATE TABLE enrolled_in (
+    trainee_id INT,
+    program_id INT,
+    PRIMARY KEY (trainee_id, program_id),
+    FOREIGN KEY (trainee_id) REFERENCES trainee (member_id) ON DELETE CASCADE,
+    FOREIGN KEY (program_id) REFERENCES program (id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE completes (
+    trainee_id INT,
+    component_id INT,
+    program_id INT,
+    avg_heart_rate INT NOT NULL,
+    max_heart_rate INT NOT NULL,
+    PRIMARY KEY (trainee_id, component_id, program_id),
+    FOREIGN KEY (trainee_id) REFERENCES trainee (member_id) ON DELETE CASCADE,
+    FOREIGN KEY (component_id) REFERENCES component (id) ON DELETE CASCADE,
+    FOREIGN KEY (program_id) REFERENCES program (id) ON DELETE CASCADE
+);

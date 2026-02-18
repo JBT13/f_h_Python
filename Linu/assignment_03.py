@@ -30,7 +30,16 @@ def secret_function(u, v, w):
         2. The dot product of u and v is 11, so the added vector scaled is Vec(D, {'a': 99, 'b': 132}).
         3. Since none of the input vectors are equal, the final result is the negated scaled vector: Vec(D, {'a': -99, 'b': -132}).
     """
-    pass
+    v_sum = u + v + w
+
+    dot = u * v
+
+    scaled = dot * v_sum
+
+    if u == v or u == w or v == w:
+        return scaled
+    
+    return -scaled
 
 
 if __name__ == "__main__":

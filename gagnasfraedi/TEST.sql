@@ -113,3 +113,151 @@ CREATE TABLE ClubRankedInNational (
     PRIMARY KEY (club_id, ranking_id)
 );
 
+
+
+SELECT -- My goat column1, column2
+FROM -- Table_name
+WHERE -- Condition
+
+SELECT * -- Helps for debugs
+FROM -- Aliases might be helpful
+WHERE -- filter
+
+SELECT * 
+FROM Country; -- Everything of country
+
+SELECT name,population
+FROM Country
+WHERE region = "Southearn Europer" -- Every name and pop where region = "blabla"
+
+SELECT population
+FROM Country
+WHERE name = "Denmark" -- Easy
+
+SELECT code, name, region -- Where country is not independece
+FROM Country
+WHERE indepyear IS NULL
+
+-- OPerators + - * / 
+
+SELECT code, name, population + 10000, -- each population + 10000
+FROM Country
+
+SELECT code ||"-"|| name as CountryLabel -- Column would be "Countrylabel" 
+FROM country
+
+-- DONT USE LIMIT MY GANG PLEASEEEEEEEEEEEEE
+SELECT name, population
+FROM Country
+ORDER BY population DESC
+
+-- Distinct dictries in USA IT COST MONEY SO USE IT WHEN NEEDED
+SELECT Distinct dictries
+FROM City 
+WHERE CountryCode = "USA"
+
+-- how many cities are in the databse
+SELECT count(*)
+FROM City
+
+SELECT count(distinct name)
+FROM City
+
+SELECT sum(population)
+FROM country
+
+SELECT avg(life_expent)
+FROM country
+
+SELECT min(population)
+FROM Country
+
+SELECT max(population)
+FROM Country
+
+-- JOIN MY GOAAATTTT
+
+-- What cities are in denmark??  W connection between tables 
+SELECT CY.name
+FROM City CY
+JOIN Country CT ON CT.Code = CY.CountryCode
+WHERE CT.name = "Denmark"
+
+SELECT disctinct CT.name
+FROM Country CT
+JOIN City CY ON CT.code = CY.CountryCode
+WHERE CY.population > 100000
+
+-- AND Operator 
+SELECT disctinct CT.name
+FROM Country CT
+JOIN City CY ON CT.code = CY.CountryCode
+JOIN IsIN I ON I.CountryCode = CT.code
+WHERE CY.population > 100000
+AND I.contitent = "Oceania"
+
+SELECT code as "Landakodi", name as "landanafn"
+FROM Country
+
+SELECT code, language
+FROM language
+WHERE isOficial IS TRUE
+
+SELECT name
+FROM City
+WHERE name LIKE "San%" -- "San___" = Santos
+-- "%ang%" somewhere in the middle of the word
+
+SELECT name 
+FROM City
+WHERE Population BETWEEN 5000 AND 2000
+
+SELECT name
+FROM country
+ORDER BY population DESC
+-- Default is ASCENDING
+
+-- GROUP BY cost a lot, so we put them in group and kópavogur knows how many kopavogur there are HAHAHHA 
+-- HAVING er lwk like where
+
+SELECT Code, count(*)
+FROM City
+GROUP BY Code 
+
+SELECT name, count(*)
+FROM City
+GROUP BY name 
+HAVING count(*) > 1 
+
+CREATE TABLE People (
+       ID INT,
+       name VARCHAR(50),
+       height FLOAT,
+       PRIMARY KEY (ID)
+);
+
+CREATE TABLE Sports (
+       ID INT,
+       name VARCHAR(50),
+       record FLOAT,
+       PRIMARY KEY (ID),
+       UNIQUE (name)
+);
+
+CREATE TABLE Competitions (
+       ID INT,
+       place VARCHAR(50),
+       held DATE,
+       PRIMARY KEY (ID)
+);
+
+CREATE TABLE Results (
+       peopleID INT,
+       competitionID INT,
+       sportID INT,
+       result FLOAT,
+       PRIMARY KEY (peopleID, competitionID, sportID),
+       FOREIGN KEY (peopleID) REFERENCES People (ID),
+       FOREIGN KEY (competitionID) REFERENCES Competitions (ID),
+       FOREIGN KEY (sportID) REFERENCES Sports (ID)
+);
