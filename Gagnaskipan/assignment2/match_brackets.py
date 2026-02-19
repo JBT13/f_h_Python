@@ -1,7 +1,8 @@
 # Choose the one most appropriate of the following ADT for your implementation.
-import stack
+from stack import Stack
 import queue
 import deque
+from sll import SLList
 
 def match_brackets(s: str) -> bool:
     """
@@ -17,8 +18,31 @@ def match_brackets(s: str) -> bool:
         "]b ["   <--- close with ] before opening
         "{{ a }"   <-- missing }
     """
-    ...
-    return False
+    values = {
+        "}":"{",
+        ")":"(",
+        "]":"["
+    }
+    ls_values = ["{", "}", "[", "]", "(", ")"]
+
+    pringles = Stack(SLList())
+    if s == "":
+        return True
+    
+    for char in s:
+        if char not in ls_values:
+            continue
+
+        if not values.get(char, False):
+            pringles.push(char)
+            
+        elif not pringles.is_empty() and values[char] == pringles.top():
+            pringles.pop()
+        
+        else:
+            return False
+    
+    return pringles.is_empty()
 
 def main():
     name = 'brackets.txt'

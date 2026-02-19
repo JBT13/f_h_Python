@@ -70,7 +70,7 @@ class DLList:
         :param pos: Position to insert
         :return: Element
         """
-        if self.size == 0:
+        if self.is_empty():
             raise RuntimeError("Empty list")
         
         if pos.node is None:
@@ -100,7 +100,7 @@ class DLList:
         :param item:Element to insert
         :return: Position of inserted element
         """
-        if self.size == 0:
+        if self.is_empty():
             return self.append_empty_list(item)
 
         if pos.node.item is None:
@@ -125,7 +125,7 @@ class DLList:
         :param item:Element to insert
         :return: Position of inserted element
         """            
-        if self.size == 0:
+        if self.is_empty():
             return self.append_empty_list(item)
 
         if pos.node.item is None:
@@ -142,14 +142,14 @@ class DLList:
 
         return pos 
 
-    ##TODO FINISH REMOVE PLEASEE!!!!
+
     def remove(self, pos: Position) -> object:
         """
         Remove element at position 'pos' in the list.
         :param pos: Position of element to remove.
         :return: Element deleted
         """
-        if self.size == 0:
+        if self.is_empty():
             raise RuntimeError("Empty list")
         
         if pos is None:
@@ -174,7 +174,7 @@ class DLList:
         :param item: New element to replace the existing one.
         :return: The element replaced (formerly at position)
         """
-        if self.size == 0:
+        if self.is_empty():
             raise RuntimeError("Empty list")
         
         if pos.node.item is None:
@@ -190,8 +190,8 @@ class DLList:
         """
         Return position of the element at the head of the list if list non-empty, or None if list is empty.
         """
-        if self.size == 0:
-            raise RuntimeError("Empty list")
+        if self.is_empty():
+            return
 
         return Position(self._head.next)
 
@@ -199,8 +199,8 @@ class DLList:
         """
         Return position of the element at the end of list if list non-empty, or None if list is empty.
         """
-        if self.size == 0:
-            raise RuntimeError("Empty list")
+        if self.is_empty():
+            return
         
         return Position(self._tail.prev)
 
@@ -208,7 +208,7 @@ class DLList:
         """
         Return position before 'pos', or None if already at front of list.
         """
-        if self.size == 0:
+        if self.is_empty():
             raise RuntimeError("Empty list")
         
         if pos.node.prev is None:
@@ -221,7 +221,7 @@ class DLList:
         """
          Return position following 'pos', or None if already at end of list.
          """
-        if self.size == 0:
+        if self.is_empty():
             raise RuntimeError("Empty list")
         
         if pos.node.next is None:
@@ -264,28 +264,23 @@ class DLList:
         Time complexity: O(1)
         :param item: element to insert
         :return: None
-        """
-        if self.is_empty():
-            return self.append_empty_list(item)
+        """    
+        pos = self.front_pos()
+        self.insert_before(pos,item)
         
-        old_node: Node = self._head.next
-        new_node = Node(self._head, item, old_node)
-        old_node.prev = new_node
-        self._head.next = new_node
-
+    
     def pop_front(self):
         """
         Remove an element from the front of the list.
         Time complexity: O(1)
         :return: None, but trows an exception if list empty.
         """
-        if self.is_empty():
-            raise RuntimeError("List is empty")
-        
-        old_node: Node = self._head.next
-        next_node: Node = old_node.next
-        next_node.prev = old_node.prev
-        self._head.next = next_node
+        pos = self.front_pos()
+        item: object = self.remove(pos)
+        if isinstance(item,object):
+            return
+        else:
+            raise RuntimeError("Error")
 
     def push_back(self, item):
         """
@@ -294,13 +289,9 @@ class DLList:
         :param item: element to insert
         :return: None
         """
-        if self.is_empty():
-            return self.append_empty_list(item)
-        
-        old_node: Node = self._tail.prev
-        new_node = Node(old_node, item, self._tail)
-        old_node.next = new_node
-        self._tail.prev = new_node
+        pos = self.back_pos()
+        self.insert_after(pos, item)
+
 
     def pop_back(self):
         """
@@ -308,24 +299,57 @@ class DLList:
         Time complexity: O(1)
         :return: None, but trows an exception if list empty.
         """
-        if self.is_empty():
-            raise RuntimeError("List is empty")
-        
-        old_node: Node = self._tail.prev
-        behind_node: Node = old_node.prev
-        behind_node.next = old_node.next
-        self._tail.prev = behind_node
+        pos = self.back_pos()
+        item = self.remove(pos)
+        if isinstance(item,object):
+            return
+        else:
+            raise RuntimeError("Error")
 
-a = DLList()
-pos = Position(a._tail)
-pos = a.insert_after(pos, 3)
-print(a)
-print(pos.node.item)
-pos = a.insert_before(pos, 4)
-print(a)
-removed_ele = a.remove(pos)
-print(removed_ele)
-print(a)
-b = a.insert_before(pos, 10)
-print(a)
+
+def main():
+    # a = DLList()
+    # # pos = Position(a._tail)
+    # # pos = a.insert_after(pos, 3)
+    # # print(a)
+    # # print(pos.node.item)
+    # # pos = a.insert_before(pos, 4)
+    # # print(a)
+    # # removed_ele = a.remove(pos)
+    # # print(removed_ele)
+    # # print(a)
+    # # b = a.insert_before(pos, 10)
+    # # print(a)
+    # a.push_front(1)
+    # a.push_front(2)
+    # a.push_front(3)
+    # pos = a.front_pos()
+    # print(a.front())
+    # print(a.back())
+    # a.push_front(4)
+    # print(a)
+    # a.pop_front()
+    # a.pop_front()
+    # a.pop_front()
+    # a.pop_front()
+    # print(a)
+
+    # a.push_back(4)
+    # a.push_back(3)
+    # a.push_back(2)
+    # a.push_back(1)
+    # print(a)
+
+    # a.pop_back()
+    # a.pop_back()
+    # a.pop_back()
+    # a.pop_back()
+    # print(a)
+    pass
+
+if __name__ == "__main__":
+    main() 
+
+
+
 

@@ -2,12 +2,11 @@
 # Gagnaskipan.
 # Stack implementation
 #
-import sll
-import dll
+from sll import SLList
+from dll import DLList
 
 class Stack:
-
-    def __init__(self, lst):
+    def __init__(self, lst = SLList()):
         self._lst = lst
 
     def __len__(self):
@@ -53,3 +52,21 @@ class Stack:
         """
         self._lst.push_front(item)
 
+
+def main():
+    a = DLList()
+    s = Stack(a)
+    s.push(5)
+    print(s.top())
+    print(s)
+    print(s)
+    s.push(6)
+    s.push(8)
+    print(s)
+    s.pop()
+    print(s)
+
+
+
+if __name__ == "__main__":
+    main()

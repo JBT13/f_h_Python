@@ -12,3 +12,6 @@ class Node:
 
     def __bool__(self):
         return self.item is not None
+    
+    def __str__(self):
+        return f"{self.item}"

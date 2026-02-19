@@ -167,17 +167,23 @@ class SLList:
         return old_node_item
 
 
-a = SLList()
-a.push_front(1)
-print(a)
-a.pop_front()
-print(a)
-a.pop_front()
-print(a)
-a.push_back(2)
-print(a)
-a.push_back(3)
-print(a)
-a.push_front(2)
-print(a)
+def main():
+    a = SLList()
+    a.push_front(1)
+    print(a)
+    a.pop_front()
+    print(a)
+    a.pop_front()
+    print(a)
+    a.push_back(2)
+    print(a)
+    a.push_back(3)
+    print(a)
+    a.push_front(2)
+    print(a)
+    
+
+if __name__ == "__main__":
+    main()
+
 
