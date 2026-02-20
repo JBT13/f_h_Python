@@ -66,17 +66,22 @@ class DLList:
         """
         return self.size == 0
 
+
+    def error_handler(self, pos: Position):
+        if self.is_empty():
+            raise RuntimeError("Empty list")
+
+        if pos.node.next is None and pos.node.prev is None:
+            raise RuntimeError("Position does not exist")
+
+
     def get_at(self, pos: Position) -> object:
         """
         Return element at position 'pos'.
         :param pos: Position to insert
         :return: Element
         """
-        if self.is_empty():
-            raise RuntimeError("Empty list")
-        
-        if pos.node is None:
-            raise RuntimeError("Position does not exist")
+        self.error_handler(pos)
 
         return pos.node.item
 
@@ -94,6 +99,7 @@ class DLList:
         pos.node = new_node
 
         return pos
+
 
     def insert_after(self, pos: Position, item: object) -> Position:
         """pos
@@ -154,7 +160,7 @@ class DLList:
         if self.is_empty():
             raise RuntimeError("Empty list")
         
-        if pos is None:
+        if pos.node.next is None and pos.node.prev is None:
             raise RuntimeError("Position does not exist")
 
         next_node: Node = pos.node.next 
@@ -164,7 +170,8 @@ class DLList:
         behind_node.next = next_node
         self.size -= 1
         removed_element = pos.node.item
-        pos.node.item = None
+        pos.node.prev = None
+        pos.node.next = None
 
         return removed_element 
  
@@ -310,10 +317,15 @@ class DLList:
 
 
 def main():
-    # a = DLList()
-    # pos = Position(a._tail)
-    # pos = a.insert_after(pos, 3)
-    # print(a)
+    a = DLList()
+    pos = Position(a._tail)
+    pos = a.insert_after(pos, 5)
+    pos = a.insert_before(pos, 6)
+    print(a)
+    a.remove(pos)
+    print(a.get_at(pos))
+    print(a.remove(pos))
+    print(a)
     # print(pos.node.item)
     # pos = a.insert_before(pos, 4)
     # print(a)
@@ -351,7 +363,3 @@ def main():
 
 if __name__ == "__main__":
     main() 
-
-
-
-
