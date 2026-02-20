@@ -42,11 +42,13 @@ def testing_deque(n, lst):
             return False
 
         if not d != s.is_empty():
+            print(s)
             return False
 
         if len(d) > 0:
             if d[0] != s.front():
                 return False
+            
             if d[-1] != s.back():
                 return False
 

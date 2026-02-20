@@ -7,7 +7,7 @@
 from dll import DLList
 
 class Deque:
-    def __init__(self, lst):
+    def __init__(self, lst = DLList()):
         """
         Constructor.
         """

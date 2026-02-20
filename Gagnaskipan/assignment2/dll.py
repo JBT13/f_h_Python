@@ -1,9 +1,11 @@
 #
 # Gagnaskipan.
 # Double-Linked-List
-# Student(s):
-#  - ... your name ...
-#
+# Student(s): Jeremias Borjas Tablante, 
+#             Sindri Freysson
+#             (THE GOATS!!!!)
+#                  :-)
+
 from dll_node import Node
 from iterator import NodeIterator
 
@@ -244,7 +246,7 @@ class DLList:
         if self.is_empty():
             raise RuntimeError("Empty list")
         
-        return self._head.next
+        return self._head.next.item
         
 
     def back(self):
@@ -256,7 +258,7 @@ class DLList:
         if self.is_empty():
             raise RuntimeError("Empty list")
         
-        return self._tail.prev 
+        return self._tail.prev.item
 
     def push_front(self, item):
         """
@@ -309,17 +311,17 @@ class DLList:
 
 def main():
     # a = DLList()
-    # # pos = Position(a._tail)
-    # # pos = a.insert_after(pos, 3)
-    # # print(a)
-    # # print(pos.node.item)
-    # # pos = a.insert_before(pos, 4)
-    # # print(a)
-    # # removed_ele = a.remove(pos)
-    # # print(removed_ele)
-    # # print(a)
-    # # b = a.insert_before(pos, 10)
-    # # print(a)
+    # pos = Position(a._tail)
+    # pos = a.insert_after(pos, 3)
+    # print(a)
+    # print(pos.node.item)
+    # pos = a.insert_before(pos, 4)
+    # print(a)
+    # removed_ele = a.remove(pos)
+    # print(removed_ele)
+    # print(a)
+    # b = a.insert_before(pos, 10)
+    # print(a)
     # a.push_front(1)
     # a.push_front(2)
     # a.push_front(3)
