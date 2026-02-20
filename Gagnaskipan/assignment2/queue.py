@@ -1,13 +1,15 @@
 #
 # Gagnaskipan.
 # Deque implementation
-# Student(s):
-#  - ... your name ...
-#
+# Student(s): Jeremias Borjas Tablante, 
+#             Sindri Freysson
+#             (THE GOATS!!!!)
+#                  :-)
+
 from sll import SLList
 
 class Queue:
-    def __init__(self, lst):
+    def __init__(self, lst = SLList()):
         """"
         Constructor.
         """

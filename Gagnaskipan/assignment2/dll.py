@@ -82,8 +82,8 @@ class DLList:
         :return: Element
         """
         self.error_handler(pos)
-
         return pos.node.item
+
 
     def append_empty_list(self,item):
         """
@@ -111,8 +111,7 @@ class DLList:
         if self.is_empty():
             return self.append_empty_list(item)
 
-        if pos.node.item is None:
-            raise RuntimeError("Position does not exist")
+        self.error_handler(pos)
 
         inserted_node = Node(pos.node, item, pos.node.next)
         current_node = pos.node
@@ -135,9 +134,8 @@ class DLList:
         """            
         if self.is_empty():
             return self.append_empty_list(item)
-
-        if pos.node.item is None:
-            raise RuntimeError("Position does not exist")
+        
+        self.error_handler(pos)
 
         inserted_node = Node(pos.node.prev, item, pos.node )
         current_node = pos.node
@@ -157,11 +155,7 @@ class DLList:
         :param pos: Position of element to remove.
         :return: Element deleted
         """
-        if self.is_empty():
-            raise RuntimeError("Empty list")
-        
-        if pos.node.next is None and pos.node.prev is None:
-            raise RuntimeError("Position does not exist")
+        self.error_handler(pos)
 
         next_node: Node = pos.node.next 
         behind_node: Node = pos.node.prev
@@ -183,11 +177,7 @@ class DLList:
         :param item: New element to replace the existing one.
         :return: The element replaced (formerly at position)
         """
-        if self.is_empty():
-            raise RuntimeError("Empty list")
-        
-        if pos.node.item is None:
-            raise RuntimeError("Position does not exist")
+        self.error_handler(pos)
         
         current_item = pos.node.item
         pos.node.item = item 
@@ -320,12 +310,10 @@ def main():
     a = DLList()
     pos = Position(a._tail)
     pos = a.insert_after(pos, 5)
-    pos = a.insert_before(pos, 6)
-    print(a)
-    a.remove(pos)
-    print(a.get_at(pos))
-    print(a.remove(pos))
-    print(a)
+    pos = a.insert_after(pos, 6)
+    b = a.next_pos(pos)
+    print(a.get_at(b))
+
     # print(pos.node.item)
     # pos = a.insert_before(pos, 4)
     # print(a)

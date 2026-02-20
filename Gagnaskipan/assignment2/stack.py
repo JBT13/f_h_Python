@@ -1,7 +1,10 @@
 #
 # Gagnaskipan.
 # Stack implementation
-#
+# Student(s): Jeremias Borjas Tablante, 
+#             Sindri Freysson
+#             (THE GOATS!!!!)
+#                  :-)
 from sll import SLList
 from dll import DLList
 

@@ -1,9 +1,10 @@
 #
 # Gagnaskipan.
 # Deque implementation
-# Student(s):
-#  - ... your name ...
-#
+# Student(s): Jeremias Borjas Tablante, 
+#             Sindri Freysson
+#             (THE GOATS!!!!)
+#                  :-)
 from dll import DLList
 
 class Deque:

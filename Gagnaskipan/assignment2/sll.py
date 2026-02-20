@@ -1,9 +1,10 @@
 #
 # Gagnaskipan.
 # Single-Linked-List
-# Student(s):
-#  - ... your name ...
-#
+# Student(s): Jeremias Borjas Tablante, 
+#             Sindri Freysson
+#             (THE GOATS!!!!)
+#                  :-)
 from sll_node import Node
 from iterator import NodeIterator
 

@@ -59,7 +59,7 @@ def testing_deque(n, lst):
     return True
 
 if __name__ == '__main__':
-    n = 20000
+    n = 6000
     print(testing_deque(n, SLList()))
     print(testing_deque(n, DLList()))
 

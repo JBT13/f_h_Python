@@ -3,6 +3,11 @@ from stack import Stack
 import queue
 import deque
 from sll import SLList
+# Student(s): Jeremias Borjas Tablante, 
+#             Sindri Freysson
+#             (THE GOATS!!!!)
+#                  :-)
+
 
 def match_brackets(s: str) -> bool:
     """
