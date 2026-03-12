@@ -261,3 +261,10 @@ CREATE TABLE Results (
        FOREIGN KEY (competitionID) REFERENCES Competitions (ID),
        FOREIGN KEY (sportID) REFERENCES Sports (ID)
 );
+
+-- transactions 
+BEGIN 
+<logic>
+COMMIT
+(Failure => Undo)
+ROLLBACK

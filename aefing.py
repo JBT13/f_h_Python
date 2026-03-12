@@ -249,13 +249,18 @@
 # d.popleft()
 # print(d)
 
-def twoSum(nums: List[int], target: int) -> List[int]:
-    ls = []
-    for i in range(len(nums)):
-        for j in range(len(nums)):
-            if nums[i] + nums[j] == target:
-                ls.append(i)
-                ls.append(j)
-                return ls
+# def twoSum(nums: List[int], target: int) -> List[int]:
+#     ls = []
+#     for i in range(len(nums)):
+#         for j in range(len(nums)):
+#             if nums[i] + nums[j] == target:
+#                 ls.append(i)
+#                 ls.append(j)
+#                 return ls
+
+l = 4
+if l % 2:
+    print("hello")
+
     
 

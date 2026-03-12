@@ -131,6 +131,3 @@ HAVING SUM(c.minutes) = (SELECT MAX(total_minutes)
         FROM CLass
         GROUP BY IID ) AS total_class_times
     );
-
-
-

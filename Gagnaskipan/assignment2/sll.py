@@ -166,22 +166,46 @@ class SLList:
         self._len -= 1
 
         return old_node_item
+    
+    def reverse(self):
+        """
+        Reverses the list in place.
+        Time complexity: O(n)
+        """
+        if self._len <= 1:
+            return  # Nothing to reverse
 
+        prev = None
+        curr = self._head
+        # The current head will become the tail once reversed
+        self._tail = self._head 
+
+        while curr is not None:
+            # 1. Save the next node
+            next_node = curr.next
+            # 2. Reverse the current node's pointer
+            curr.next = prev
+            # 3. Step forward: prev becomes the current node
+            prev = curr
+            # 4. Step forward: current becomes the saved next node
+            curr = next_node
+          
+        # Finally, the 'prev' node is the new head of the list
+        self._head = prev
 
 def main():
     a = SLList()
     a.push_front(1)
     print(a)
-    a.pop_front()
-    print(a)
-    a.pop_front()
-    print(a)
     a.push_back(2)
     print(a)
     a.push_back(3)
     print(a)
-    a.push_front(2)
+    a.push_back(4)
     print(a)
+    a.reverse()
+    print(a)
+
     
 
 if __name__ == "__main__":

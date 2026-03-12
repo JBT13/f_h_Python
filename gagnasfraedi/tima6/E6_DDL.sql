@@ -156,3 +156,15 @@ CREATE TRIGGER Account_Withdrawn
 BEFORE INSERT OR UPDATE OR DELETE ON Records
 FOR EACH ROW 
 EXECUTE FUNCTION Account_Withdrawn();
+
+--4
+
+CREATE FUNCTION Transfer()
+RETURNS VOID
+AS $$
+DECLARE
+    iToAID INT; 
+    iFromAID INT;
+    iAmount INT; 
+BEGIN 
+    IF (iFromAID) 

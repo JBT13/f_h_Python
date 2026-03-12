@@ -62,4 +62,8 @@ if __name__ == '__main__':
     n = 6000
     print(testing_deque(n, SLList()))
     print(testing_deque(n, DLList()))
+    # a = [10,20,30]
+    # b = a[:]
+    # b[2] = 20
+    # print(a,b)
 
