@@ -1,28 +1,9 @@
 #
 # BST - Trees (Binary Search Trees)
 # Your name:
-#  - ???
+#  - <Add your name here>
 #
-from interface.binary_search_tree_abc import IBinarySearchTree
-
-class Position:
-    def __init__(self, handle):
-        self.handle = handle
-
-class Pair:
-    def __init__(self, key: object, value: object = None):
-        self.key = key
-        self.value = value
-
-    def __lt__(self, other):
-        return self.key < other.key
-
-    def __str__(self):
-        if self.value is None:
-            s = str(self.key)
-        else:
-            s = '{' + str(self.key) + ', ' + str(self.value) + '}'
-        return s
+from interface.binary_search_tree_abc import Pair, IBinarySearchTree
 
 
 class BinarySearchTree(IBinarySearchTree):
@@ -61,72 +42,41 @@ class BinarySearchTree(IBinarySearchTree):
     def __iter__(self):
         node = self._first()
         while node is not None:
-            yield node
+            yield node.pair
             node = self._after(node)
 
     def __reversed__(self):
         node = self._last()
         while node is not None:
-            yield node
+            yield node.pair
             node = self._before(node)
 
     def _first(self) -> _Node | None:
         """
         In a non-empty tree, returns the minimum key node (first in an inorder traversal), otherwise None.
         """
-        node = self._root
-        left = None
-        while node.left is not None:
-            left = node 
-
-        return left
+        # TO DO ...
+        return None
 
     def _last(self) -> _Node | None:
         """
         In a non-empty tree, returns the maximum key node (last in an inorder traversal), otherwise None.
         """
         # TO DO ...
-        node = self._root
-        right = None
-        while node.right is not None:
-            right = node
-
-        return right
+        return None
 
     def _before(self, node: _Node) -> _Node | None:
         """
         Returns the in-order predecessor of node, or None if it does not exist.
         """
-        if node == self._first():
-            return None
-        
-        if node.left is None:
-            pre = node.parent
-            while node.pair.key > pre.pair.key:
-                pre = pre.parent 
-
-            return pre
-        
-        if node.left is not None:
-            curr = node.left
-            pre = curr.right
-            while pre is not None:
-                pre = curr.right 
-        
-            return pre 
+        # TO DO ...
+        return None
 
     def _after(self, node: _Node) -> _Node | None:
         """
         Returns the in-order successor of node, or None if it does not exist.
         """
-        if node == self._first():
-            return node.parent
-        
-        if node.left is None and node.right:
-            return node.right
-
-
-
+        # TO DO ...
         return None
 
     # --------------------------------------------------------------------------------------
@@ -155,7 +105,7 @@ class BinarySearchTree(IBinarySearchTree):
         """
         Returns a list of all the keys in the tree, in an increasing order.
         """
-        return [key for key, _ in self.pairs()]
+        return [pair.key for pair in self.pairs()]
 
     def insert(self, pair: Pair) -> bool:
         """
@@ -170,7 +120,8 @@ class BinarySearchTree(IBinarySearchTree):
         """
         Returns True if the tree is empty, False otherwise.
         """
-        return self._root == None
+        # TO DO ...
+        return True
 
     def is_in(self, key: object) -> bool:
         """
@@ -197,7 +148,8 @@ class BinarySearchTree(IBinarySearchTree):
         """
         Removes all elements from the tree (tree becomes empty).
         """
-        self._root = None
+        # TO DO ...
+        ...
 
     def delete(self, key: object) -> bool:
         """
