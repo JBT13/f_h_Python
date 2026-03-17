@@ -55,29 +55,58 @@ class BinarySearchTree(IBinarySearchTree):
         """
         In a non-empty tree, returns the minimum key node (first in an inorder traversal), otherwise None.
         """
-        # TO DO ...
-        return None
+        node = self._root
+        left = None
+        while node.left is not None:
+            left = node 
+
+        return left
 
     def _last(self) -> _Node | None:
         """
         In a non-empty tree, returns the maximum key node (last in an inorder traversal), otherwise None.
         """
-        # TO DO ...
-        return None
+        node = self._root
+        right = None
+        while node.right is not None:
+            right = node
+
+        return right
 
     def _before(self, node: _Node) -> _Node | None:
         """
         Returns the in-order predecessor of node, or None if it does not exist.
         """
-        # TO DO ...
-        return None
+        if node == self._first():
+            return None
+        
+        if node.left is None:
+            pre = node.parent
+            while node.pair.key > pre.pair.key:
+                pre = pre.parent 
+
+            return pre
+        
+        if node.left is not None:
+            curr = node.left
+            pre = curr.right
+            while pre is not None:
+                pre = curr.right 
+        
+            return pre 
 
     def _after(self, node: _Node) -> _Node | None:
         """
         Returns the in-order successor of node, or None if it does not exist.
         """
-        # TO DO ...
+        if node == self._first():
+            return node.parent
+        
+        if node.left is None and node.right:
+            return node.right
+
         return None
+
 
     # --------------------------------------------------------------------------------------
     # Public methods, implementing the abstract-base-class interface.

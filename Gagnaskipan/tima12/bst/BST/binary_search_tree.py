@@ -125,8 +125,6 @@ class BinarySearchTree(IBinarySearchTree):
         if node.left is None and node.right:
             return node.right
 
-
-
         return None
 
     # --------------------------------------------------------------------------------------
