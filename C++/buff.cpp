@@ -5,7 +5,10 @@ int main(){
     long l,h,n,m;
 
     for (long i = 2; i != 0; i *= 2) {
-                cout << "buf[" << i << "]" << endl;
+        cout << 
+            "buf[" 
+            << i << 
+        "]" << endl;
 
 
         cin >> n;
@@ -36,6 +39,5 @@ int main(){
             h = m; 
         }
     }
-
     cout << "strlen(buf) = " << h << endl;
 }
