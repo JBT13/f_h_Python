@@ -60,7 +60,8 @@ class DAList:
         for i in range(self.size):
             string += str(self.data[i]) + ", "
         
-        return "[" + string[:-2] + "]"        
+        return "[" + string[:-2] + "]"  
+
 
 
     def __delitem__(self, index: int):
@@ -265,3 +266,33 @@ class DAList:
         for i in range(value_index, self.size-1):
             self.data[i] = self.data[i+1]
         self.size -= 1
+
+    def prepend(self,e):
+        if self.size == self.capacity:
+            self.resize(2)
+
+        for i in range(self.size,0,-1):
+            self.data[i] = self.data[i-1]
+
+        self.data[0] = e
+        self.size += 1 
+
+    def reverse_1(self):
+        if self.size == 0:
+            return False
+        
+        for i in range(self.size//2):
+            j = self.size - i - 1
+            self.data[i], self.data[j] = self.data[j], self.data[i]
+
+
+a = DAList()
+a.append(1)
+a.append(2)
+a.append(3)
+a.append(4)
+print(a)
+a.reverse_1()
+print(a)
+
+        

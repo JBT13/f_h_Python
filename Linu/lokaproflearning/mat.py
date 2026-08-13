@@ -1,4 +1,6 @@
+# Copyright 2013 Philip N. Klein
 from vec import Vec
+
 
 def getitem(M, k):
     """
@@ -57,14 +59,9 @@ def equal(A, B):
     >>> A == Mat(({'a','b'}, {'A','B'}), {('a','B'):2, ('b','A'):1})
     True
     """
-    if A.D != B.D:
-        return False
+    assert A.D == B.D
+    return not any(A[(k1, k2)] != B[(k1, k2)] for k2 in A.D[1] for k1 in A.D[0])
 
-    for i in A.f.keys() | B.f.keys():
-        if A[i] != B[i]:
-            return False
-
-    return True
 
 def add(A, B):
     """
@@ -91,22 +88,8 @@ def add(A, B):
     >>> C1 + C2 == D
     True
     """
-    assert A.D == B.D # checking the same dimensions/domain
-
-    new_m_dic = {}
-
-    # set union on keys
-    all_c = A.f.keys() | B.f.keys()
-
-    for i in all_c:
-        sum = A[i] + B[i]
-
-        if sum != 0:
-            new_m_dic[i] = sum
-
-    return Mat(A.D, new_m_dic)
-            
-        
+    assert A.D == B.D
+    return Mat(A.D, {(k1, k2): A[(k1, k2)] + B[(k1, k2)] for k2 in A.D[1] for k1 in A.D[0]})
 
 
 def scalar_mul(M, x):
@@ -121,18 +104,8 @@ def scalar_mul(M, x):
     >>> 0.25*M == Mat(({1,3,5}, {2,4}), {(1,2):1.0, (5,4):0.5, (3,4):0.75})
     True
     """
-    pass
+    return Mat(M.D, {k: x * M[k]  for k in M.f})
 
-    if x == 0:
-        return Mat(M.D, {})
-    
-    new_m_dic = {}
-
-    for key,value in M.f.items():
-        new_m_dic[key] = value * x
-
-    return Mat(M.D, new_m_dic)
-        
 
 def transpose(M):
     """
@@ -146,15 +119,8 @@ def transpose(M):
     >>> M.transpose() == Mt
     True
     """
-    
-    new_d = (M.D[1], M.D[0])
+    return Mat((M.D[1], M.D[0]), {(k2, k1): M[(k1, k2)] for k1,k2 in M.f})
 
-    new_m_dic = {}
-
-    for (row,column), value in M.f.items():
-        new_m_dic[(column,row)] = value
-
-    return Mat(new_d, new_m_dic)
 
 def vector_matrix_mul(v, M):
     """
@@ -180,17 +146,93 @@ def vector_matrix_mul(v, M):
     >>> v3*M3 == Vec({0, 1},{0: 2, 1: 2})
     True
     """
+    assert M.D[0] == v.D
+
+    return Vec(M.D[1], {k2:sum(v[k1] * M[(k1, k2)] for k1 in v.D) for k2 in M.D[1]})
+
+
+def matrix_vector_mul(M, v):
+    """
+    Returns the product of matrix M and vector v.
+
+    Consider using brackets notation v[...] in your procedure
+    to access entries of the input vector.  This avoids some sparsity bugs.
+
+    >>> N1 = Mat(({1, 3, 5, 7}, {'a', 'b'}), {(1, 'a'): -1, (1, 'b'): 2, (3, 'a'): 1, (3, 'b'):4, (7, 'a'): 3, (5, 'b'):-1})
+    >>> u1 = Vec({'a', 'b'}, {'a': 1, 'b': 2})
+    >>> N1*u1 == Vec({1, 3, 5, 7},{1: 3, 3: 9, 5: -2, 7: 3})
+    True
+    >>> N1 == Mat(({1, 3, 5, 7}, {'a', 'b'}), {(1, 'a'): -1, (1, 'b'): 2, (3, 'a'): 1, (3, 'b'):4, (7, 'a'): 3, (5, 'b'):-1})
+    True
+    >>> u1 == Vec({'a', 'b'}, {'a': 1, 'b': 2})
+    True
+    >>> N2 = Mat(({('a', 'b'), ('c', 'd')}, {1, 2, 3, 5, 8}), {})
+    >>> u2 = Vec({1, 2, 3, 5, 8}, {})
+    >>> N2*u2 == Vec({('a', 'b'), ('c', 'd')},{})
+    True
+    >>> M3 = Mat(({0,1},{'a','b'}),{(0,'a'):1, (0,'b'):1, (1,'a'):1, (1,'b'):1})
+    >>> v3 = Vec({'a','b'},{'a':1,'b':1})
+    >>> M3*v3 == Vec({0, 1},{0: 2, 1: 2})
+    True
+    """
+    assert M.D[1] == v.D
+
+    dic = {}
+
+    for index in M.D[0]:
+        count = 0
+        for value in v.D:
+            count += v[value] * M[index, value]
+        dic[index] = count
+
+    return Vec(M.D[0], dic)
+
+def matrix_matrix_mul(A, B):
+    """
+    Returns the result of the matrix-matrix multiplication, A*B.
+
+    Consider using brackets notation A[...] and B[...] in your procedure
+    to access entries of the input matrices.  This avoids some sparsity bugs.
+
+    >>> A = Mat(({0,1,2}, {0,1,2}), {(1,1):4, (0,0):0, (1,2):1, (1,0):5, (0,1):3, (0,2):2})
+    >>> B = Mat(({0,1,2}, {0,1,2}), {(1,0):5, (2,1):3, (1,1):2, (2,0):0, (0,0):1, (0,1):4})
+    >>> A*B == Mat(({0,1,2}, {0,1,2}), {(0,0):15, (0,1):12, (1,0):25, (1,1):31})
+    True
+    >>> C = Mat(({0,1,2}, {'a','b'}), {(0,'a'):4, (0,'b'):-3, (1,'a'):1, (2,'a'):1, (2,'b'):-2})
+    >>> D = Mat(({'a','b'}, {'x','y'}), {('a','x'):3, ('a','y'):-2, ('b','x'):4, ('b','y'):-1})
+    >>> C*D == Mat(({0,1,2}, {'x','y'}), {(0,'y'):-5, (1,'x'):3, (1,'y'):-2, (2,'x'):-5})
+    True
+    >>> M = Mat(({0, 1}, {'a', 'c', 'b'}), {})
+    >>> N = Mat(({'a', 'c', 'b'}, {(1, 1), (2, 2)}), {})
+    >>> M*N == Mat(({0,1}, {(1,1), (2,2)}), {})
+    True
+    >>> E = Mat(({'a','b'},{'A','B'}), {('a','A'):1,('a','B'):2,('b','A'):3,('b','B'):4})
+    >>> F = Mat(({'A','B'},{'c','d'}),{('A','d'):5})
+    >>> E*F == Mat(({'a', 'b'}, {'d', 'c'}), {('b', 'd'): 15, ('a', 'd'): 5})
+    True
+    >>> F.transpose()*E.transpose() == Mat(({'d', 'c'}, {'a', 'b'}), {('d', 'b'): 15, ('d', 'a'): 5})
+    True
+    """
+    assert A.D[1] == B.D[0]
     
-    assert v.D == M.D[0]
+    row_domain = A.D[0]
+    col_domain = B.D[1]
+    shared = A.D[1]
 
-    new_f = {}
+    dic = {}
 
-    for (r, c), value in M.f.items():
-        val = v[r] * value
+    for r in row_domain:
+        for c in col_domain:
+            count = 0
+            for k in shared:
+                count += A[r,k] * B[k,c]
+            if count != 0:
+                dic[(r,c)] = count
 
-        new_f[c] = new_f.get(c, 0) + val
+    return Mat((row_domain,col_domain), dic)
 
-    return Vec(M.D[1], new_f)
+
+
 
 ################################################################################
 
@@ -262,7 +304,6 @@ class Mat:
 
     def __iter__(self):
         raise TypeError('%r object is not iterable' % self.__class__.__name__)
-
 
 if __name__ == "__main__":
     import doctest

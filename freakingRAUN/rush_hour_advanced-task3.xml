@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>const int n = 6;          // breytanlegt board siez
+clock total_time;         // clock fyrir task 5
+int movec = 0;
+
+int[0,20] grid[n][n];    // í hverjum reit getur verið bíll með id, eða 0 sem er empty reitur
+
+int total_moves = 0;
+
+// Boolean fall sem skilar true ef id er á stað (x,y) og getur farið á næsta stað (dx, dy)
+bool canMove(int id, int x, int y, int dx, int dy, int len, bool horiz, int steps) {
+    int i;
+    if (horiz) {
+        // Fyrir lárétta bíla, tjekka hvort að allir næstu reitir eru lausir.
+        // Ef hægri: dx &gt; 0, skoða reiti x+len til x+len+steps-1
+        // Ef vinstri: dx &lt; 0, skoða reiti x-1 til x-steps
+        for (i = 1; i &lt;= steps; i++) {
+            int nextX = (dx &gt; 0) ? x + len + i - 1 : x - i;
+            if (nextX &lt; 0 || nextX &gt;= n) return false;  // ef hann skildi fara útfyrir kassann
+            if (grid[y][nextX] != 0) return false;       // ef einhver reitur á leiðinni er upptekinn
+        }
+        return true;  // allir reitir á leiðinni eru lausir
+    } else {
+        // sama fyrir lóðrétta bíla, nema með y
+        for (i = 1; i &lt;= steps; i++) {
+            int nextY = (dy &gt; 0) ? y + len + i - 1 : y - i;
+            if (nextY &lt; 0 || nextY &gt;= n) return false;  // ef hann skildi fara útfyrir kassann
+            if (grid[nextY][x] != 0) return false;       // ef einhver reitur á leiðinni er upptekinn
+        }
+        return true;  // allir reitir á leiðinni eru lausir
+    }
+}
+
+void move_car(int id, int x, int y, int dx, int dy, int len, bool horiz, int steps) {
+    int i;
+    if (horiz) {
+        if (dx &gt; 0) {  // fer til hægri
+            for (i = 0; i &lt; len; i++) grid[y][x + i] = 0;          // tæmir alla gamla reiti
+            for (i = 0; i &lt; len; i++) grid[y][x + steps + i] = id; // fyllir alla nýja reiti
+        } else if (dx &lt; 0) {  // fer til vinstri
+            for (i = 0; i &lt; len; i++) grid[y][x + i] = 0;          // tæmir alla gamla reiti
+            for (i = 0; i &lt; len; i++) grid[y][x - steps + i] = id; // fyllir alla nýja reiti
+        }
+    } else {
+        if (dy &gt; 0) {  // fer niður
+            for (i = 0; i &lt; len; i++) grid[y + i][x] = 0;          // tæmir alla gamla reiti
+            for (i = 0; i &lt; len; i++) grid[y + steps + i][x] = id; // fyllir alla nýja reiti
+        } else if (dy &lt; 0) {  // fer upp
+            for (i = 0; i &lt; len; i++) grid[y + i][x] = 0;          // tæmir alla gamla reiti
+            for (i = 0; i &lt; len; i++) grid[y - steps + i][x] = id; // fyllir alla nýja reiti
+        }
+    }
+}
+
+
+// Stillir upp bílum frá Local Declarations í initializer með bíla ids
+void place_car(int id, int len, int x, int y, bool horiz) {
+    // mikilvægt að initializa rétt inn í local initializer
+    int i;
+    for (i = 0; i &lt; len; i++) {
+        if (horiz &amp;&amp; x + i &lt; n)      grid[y][x + i] = id;  // fer frá vinstri til hægri
+        else if (!horiz &amp;&amp; y + i &lt; n) grid[y + i][x] = id; // fer frá topp niður að botn
+    }
+}
+</declaration>
+	<template>
+		<name>initializer</name>
+		<declaration>// false = Vertical
+// treu = Horizontal
+void place_all() {
+    place_car(1,  2, 3, 2, true);
+    place_car(2,  2, 0, 0, true);
+    place_car(3,  2, 2, 0, true); 
+    place_car(4,  2, 4, 0, false); 
+    place_car(5,  2, 2, 1, false); 
+    place_car(6,  3, 5, 1, false);
+    place_car(7,  2, 1, 2, false);
+    place_car(8,  3, 0, 3, false);
+    place_car(9,  2, 3, 3, true);
+    place_car(10, 2, 3, 4, false);
+    place_car(11, 2, 4, 4, true);
+    place_car(12, 2, 1, 5, true);
+    place_car(13, 2, 4, 5, true);
+}</declaration>
+		<location id="id0" x="0" y="0">
+			<committed/>
+		</location>
+		<location id="id1" x="0" y="-136">
+		</location>
+		<init ref="id0"/>
+		<transition id="id2">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="17" y="-76">place_all()</label>
+		</transition>
+	</template>
+	<template>
+		<name>verticalCar</name>
+		<parameter>int id, int length, int x, int y</parameter>
+		<location id="id3" x="-7" y="-103">
+		</location>
+		<init ref="id3"/>
+		<transition id="id4">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="select" x="-111" y="-229">s : int[1, n]</label>
+			<label kind="guard" x="-187" y="-255">canMove(id, x, y, 0, -1, length, false, s)</label>
+			<label kind="assignment" x="-230" y="-280">move_car(id, x, y, 0, -1, length, false, s), y -= s, total_moves += 1</label>
+			<nail x="-76" y="-195"/>
+			<nail x="60" y="-195"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="select" x="-93" y="0">s : int[1, n]</label>
+			<label kind="guard" x="-161" y="25">canMove(id, x, y, 0, 1, length, false, s)</label>
+			<label kind="assignment" x="-212" y="59">move_car(id, x, y, 0, 1, length, false, s), y += s, total_moves += 1</label>
+			<nail x="-67" y="-9"/>
+			<nail x="60" y="-9"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">horizontalCar</name>
+		<parameter>int id, int length, int x, int y</parameter>
+		<location id="id6" x="161" y="59">
+		</location>
+		<init ref="id6"/>
+		<transition id="id7">
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="select" x="-289" y="51">s : int[1, n]</label>
+			<label kind="guard" x="-374" y="25">canMove(id, x, y, -1, 0, length, true, s)</label>
+			<label kind="assignment" x="-620" y="-34">move_car(id, x, y, -1, 0, length, true, s), x -= s, total_moves += 1, movec += (id == 1 ? 1 : 0)</label>
+			<nail x="76" y="8"/>
+			<nail x="76" y="93"/>
+		</transition>
+		<transition id="id8">
+			<source ref="id6"/>
+			<target ref="id6"/>
+			<label kind="select" x="356" y="59">s : int[1, n]</label>
+			<label kind="guard" x="280" y="33">canMove(id, x, y, 1, 0, length, true, s)</label>
+			<label kind="assignment" x="263" y="-34">move_car(id, x, y, 1, 0, length, true, s), x += s, total_moves += 1, movec += (id == 1 ? 1 : 0)</label>
+			<nail x="238" y="8"/>
+			<nail x="238" y="93"/>
+		</transition>
+	</template>
+	<system>inits = initializer();
+red = horizontalCar(1,  2, 3, 2);
+car1 = horizontalCar(2,  2, 0, 0);
+car2 = horizontalCar(3,  2, 2, 0);
+car3 = verticalCar  (4,  2, 4, 0);
+car4 = verticalCar  (5,  2, 2, 1);
+truck1 = verticalCar  (6,  3, 5, 1);
+car6 = verticalCar  (7,  2, 1, 2);
+truck2 = verticalCar  (8,  3, 0, 3);
+car7 = horizontalCar(9,  2, 3, 3);
+car8 = verticalCar  (10, 2, 3, 4);
+car9 = horizontalCar(11, 2, 4, 4);
+car10 = horizontalCar(12, 2, 1, 5);
+car11 = horizontalCar(13, 2, 4, 5);
+
+system inits, red, car1, car2, car3, car4, truck1, car6, truck2, car7, car8, car9, car10, car11;</system>
+	<queries>
+		<option key="--diagnostic" value="1"/>
+		<query>
+			<formula>E&lt;&gt; red.x == 4 &amp;&amp; total_moves == 16 &amp;&amp; movec &lt;= 2</formula>
+			<comment/>
+		</query>
+	</queries>
+</nta>

@@ -79,43 +79,59 @@ class MyMap(MutableMapping):
     # ------------------------------------------------------------------
 
     def __setitem__(self, key, value):
-        """
-        Sets (updates if exists, otherwise adds) the value at key entry, i.e. d[key] = value
-        """
+        # 1. Check for resize
         if self._max_load_factor is not None and 0.0 < self._max_load_factor <= self._load_factor():
             self._resize()
 
-        # Get a bucket
+        # 2. Find the correct bucket
         bucket_id = h(key, len(self._array))
-
-        index = self._array(self._array[bucket_id], key)
-
-        x = self.Item(key,value)
-    
-        if index is None:
-            self._array[bucket_id].append(value)
+        bucket = self._array[bucket_id]
         
+        # 3. Check if key already exists
+        index = self._in_array(bucket, key)
+        new_item = self.Item(key, value)
+
+        if index is None:
+            # Add new item
+            bucket.append(new_item)
+            self._len += 1
         else:
-            self._array[index].append(x)
-
-
+            # Update existing item
+            bucket[index] = new_item
 
     def __getitem__(self, key):
-        """
-        Returns the value at key entry, i.e. value = d[key].
-        Raises KeyError if the key is not found.
-        """
-        # TO DO ...
-        raise KeyError(f"Key '{key}' not found in map.")
+        bucket_id = h(key, len(self._array))
+        bucket = self._array[bucket_id]
+        
+        index = self._in_array(bucket, key)
+        if index is not None:
+            return bucket[index].value
+        
+        raise KeyError(f"Key '{key}' not found.")
 
     def __delitem__(self, key):
-        """
-        Returns the entry at key, i.e. del d[key]
-        """
-        # TO DO ...
-        ...
-        raise KeyError(f"Key '{key}' not found in map.")
+        bucket_id = h(key, len(self._array))
+        bucket = self._array[bucket_id]
+        
+        index = self._in_array(bucket, key)
+        if index is not None:
+            bucket.pop(index)
+            self._len -= 1
+            return
+        
+        raise KeyError(f"Key '{key}' not found.")
 
     def _resize(self):
-        # TO DO ...
-        ...
+        # 1. Save the old data
+        old_array = self._array
+        
+        # 2. Double the capacity and reset the map
+        new_capacity = len(old_array) * 2
+        self._array = [[] for _ in range(new_capacity)]
+        self._len = 0 # Reset length because __setitem__ will re-increment it
+        
+        # 3. Rehash: Iterate through every bucket and every item
+        for bucket in old_array:
+            for item in bucket:
+                # Use the existing __setitem__ to put items in the new larger array
+                self.__setitem__(item.key, item.value)

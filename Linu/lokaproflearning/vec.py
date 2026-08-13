@@ -67,15 +67,13 @@ def equal(u,v):
     >>> Vec({'a','b'},{'a':1}) == Vec({'a','b'},{'a':2})
     False
     """
-
     assert u.D == v.D
 
-    for i in u.D:
-        if u[i] != v[i]:
-            return False
-        
-    return True
+    for key in v.D:
+        if v[key] != u[key]:
+            return False  
 
+    return True
 
 def add(u,v):
     """
@@ -112,7 +110,19 @@ def add(u,v):
     True
     """
     assert u.D == v.D
-    return Vec(u.D, {k:u[k]+v[k] for k in u.D})
+
+    new_dic = {}
+
+    for key in u.D:
+        if key in v.D:
+            new_dic[key] = u[key] + v[key]
+
+    for key in v.D:
+        if key not in new_dic:
+            new_dic[key] = v[key]
+
+    return Vec(v.D, new_dic)
+            
 
 def dot(u,v):
     """
@@ -146,7 +156,12 @@ def dot(u,v):
     12
     """
     assert u.D == v.D
-    return sum(u[k]*v[k] for k in u.D)
+
+    count = 0
+    for key in v.D:
+        count += v[key] * u[key]
+
+    return count
 
 def scalar_mul(v, alpha):
     """
@@ -166,7 +181,12 @@ def scalar_mul(v, alpha):
     >>> u == Vec({'x','y','z','w'},{'x':1,'y':2,'z':3,'w':4})
     True
     """
-    return Vec(v.D, {k:alpha*v[k] for k in v.D})
+
+    new = {}
+    for key in v.D:
+        new[key] = v[key] * alpha
+
+    return Vec(v.D, new)
 
 def neg(v):
     """
@@ -183,8 +203,13 @@ def neg(v):
     >>> -Vec({'a','b','c'}, {'a':1}) == Vec({'a','b','c'}, {'a':-1})
     True
     """
-    return scalar_mul(v, -1)
+    new = {}
+    for key in v.D:
+        new[key] = -v[key] 
 
+    return Vec(v.D, new)
+
+###############################################################################################################################
 
 class Vec:
     """
@@ -265,3 +290,9 @@ class Vec:
     def __iter__(self):
         raise TypeError('%r object is not iterable' % self.__class__.__name__)
 
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+
+# print(equal(Vec({'a', 'b', 'c'}, {'a':0}), Vec({'a', 'b', 'c'}, {'b':0}))) 

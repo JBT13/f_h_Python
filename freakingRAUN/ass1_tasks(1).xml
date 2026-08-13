@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Cordinates
+int[0,2] x = 0;
+int[0,2] y = 0;
+// Orientation
+int[0,3] d = 0;
+// square visited
+clock total_time;
+int battery = 100;
+
+bool visited[3][3] = {{1,0,0}, {0,0,0}, {0,0,0}};
+
+const int FORWARD = 0;
+const int TURN = 1;
+const int BOUNDS = -1;
+
+bool pathComplete = false;
+// New Constants
+const int UNSEEN = -1;
+const int ANY = 2; // Represents "Free Will"
+
+// Memory Array: [x][y][d]. Initialized to -1 (UNSEEN)
+int memory[3][3][4] = {
+    {{-1,-1,-1,-1}, {-1,-1,-1,-1}, {-1,-1,-1,-1}},
+    {{-1,-1,-1,-1}, {-1,-1,-1,-1}, {-1,-1,-1,-1}},
+    {{-1,-1,-1,-1}, {-1,-1,-1,-1}, {-1,-1,-1,-1}}
+};
+
+bool wall() {
+    if (d == 0 &amp;&amp; y == 2) return true; // Wall at North
+    if (d == 1 &amp;&amp; x == 2) return true; // Wall at East
+    if (d == 2 &amp;&amp; y == 0) return true; // Wall at South
+    if (d == 3 &amp;&amp; x == 0) return true; // Wall at West
+    return false;
+}
+
+int getAction() {
+    // 2. FIXED PATH (First time through)
+    //if (x == 0 &amp;&amp; y == 0 &amp;&amp; d == 0) return FORWARD;
+    //if (x == 0 &amp;&amp; y == 1 &amp;&amp; d == 0) return FORWARD;
+    //if (x == 0 &amp;&amp; y == 2 &amp;&amp; d == 0) return TURN;
+    //if (x == 0 &amp;&amp; y == 2 &amp;&amp; d == 1) return FORWARD;
+    
+        // 3. REACTIVE BOUNDARIES
+    if (wall()) {
+        return TURN; // No free will into a wall!
+    }
+
+    if (memory[x][y][d] != UNSEEN) {
+        return memory[x][y][d]; // Return the exact action it took last time
+    }
+
+    // 4. FREE WILL
+    // If it's safe and unseen, let UPPAAL test both moving and turning.
+    return ANY; 
+}
+
+bool goal = false;
+
+void move() {
+    memory[x][y][d] = FORWARD;
+
+    if (d == 0) y++;
+    else if (d == 1) x++;
+    else if (d == 2) y--;
+    else if (d == 3) x--;
+
+    visited[x][y] = true;
+    if (x == 2 &amp;&amp; y == 2) goal = true;
+}
+
+void turn() {
+    memory[x][y][d] = TURN;
+    d = (d + 1) % 4;      // 90-degree right turn
+}
+</declaration>
+	<template>
+		<name x="5" y="5">Robot</name>
+		<declaration>// Place local declarations here.
+clock y;</declaration>
+		<location id="id0" x="297" y="-102">
+		</location>
+		<init ref="id0"/>
+		<transition id="id1">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="306" y="-195">(getAction() == TURN || getAction() == ANY) &amp;&amp; y &gt;= 1 &amp;&amp; battery &gt;= 1</label>
+			<label kind="assignment" x="433" y="-51">turn(), y = 0, battery -= 1</label>
+			<nail x="416" y="-42"/>
+			<nail x="408" y="-161"/>
+		</transition>
+		<transition id="id2">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-136" y="-25">(getAction() == FORWARD || getAction() == ANY) &amp;&amp; y &gt;= 5 &amp;&amp; battery &gt;= 1</label>
+			<label kind="assignment" x="34" y="-178">move(),y = 0, battery -=1</label>
+			<nail x="178" y="-153"/>
+			<nail x="187" y="-42"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+rob = Robot();
+// com = Compass();
+// List one or more processes to be composed into a system.
+system rob;
+</system>
+	<queries>
+		<option key="--diagnostic" value="2"/>
+		<query>
+			<formula>E&lt;&gt; goal &amp;&amp; x == 0 &amp;&amp; y == 0 &amp;&amp; visited[0][0] &amp;&amp; visited[0][1] &amp;&amp; visited[0][2] &amp;&amp; visited[1][0] &amp;&amp; visited[1][1] &amp;&amp; visited[1][2] &amp;&amp; visited[2][0] &amp;&amp; visited[2][1] &amp;&amp; visited[2][2]</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2026-05-04 11:24:47 +0000">
+				<option key="--diagnostic" value="2"/>
+			</result>
+		</query>
+	</queries>
+</nta>

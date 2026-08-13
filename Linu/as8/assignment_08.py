@@ -1,7 +1,7 @@
 # version code 80e56511a793+
 # Please fill out this stencil and submit using the provided submission script.
 
-from vec import Vec
+from trufal.vec import Vec
 from GF2 import one
 import math
 

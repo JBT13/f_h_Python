@@ -1,5 +1,5 @@
-from mat import Mat
-from vec import Vec
+from trufal.mat import Mat
+from trufal.vec import Vec
 from orthogonalization import orthogonalize
 
 

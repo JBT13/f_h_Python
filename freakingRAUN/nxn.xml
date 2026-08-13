@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>const int n = 3;
+
+// Coordinates
+int[0,n-1] x = 0;
+int[0,n-1] y = 0;
+
+int[0,1] strategy[n][n][4];
+
+clock total_time;
+int battery = 100;
+
+int move_time = 5;
+int turn_time = 1;
+
+const int FORWARD = 0;
+const int TURN = 1;
+const int BOUNDS = -1;
+
+bool pathComplete = false;
+
+const int UNSEEN = -1;
+const int ANY = 2;
+
+int turnc = 0;
+int movec = 0;</declaration>
+	<template>
+		<name x="5" y="5">Robot</name>
+		<parameter>int x, int y</parameter>
+		<declaration>clock t;
+int[0,3] d = 0;
+bool visited[n][n];
+bool seen[n][n][4];
+
+bool wall() {
+    if (d == 0 &amp;&amp; y == n-1) return true;
+    if (d == 1 &amp;&amp; x == n-1) return true;
+    if (d == 2 &amp;&amp; y == 0) return true;
+    if (d == 3 &amp;&amp; x == 0) return true;
+    return false;
+}
+
+int getAction() {
+    //if (x == 0 &amp;&amp; y == 0 &amp;&amp; d == 0) return FORWARD;
+    //if (x == 0 &amp;&amp; y == 1 &amp;&amp; d == 0) return FORWARD;
+    //if (x == 0 &amp;&amp; y == 2 &amp;&amp; d == 0) return TURN;
+    //if (x == 0 &amp;&amp; y == 2 &amp;&amp; d == 1) return FORWARD;
+    if (wall()) return TURN;
+
+    if (seen[x][y][d]) {
+        return strategy[x][y][d];
+    }
+
+    return ANY;
+}
+
+bool goal = false;
+
+void move() {
+    strategy[x][y][d] = FORWARD;
+    seen[x][y][d] = true;
+
+    if (d == 0) y++;
+    else if (d == 1) x++;
+    else if (d == 2) y--;
+    else if (d == 3) x--;
+
+    visited[x][y] = true;
+
+    if (x == n-1 &amp;&amp; y == n-1) {
+        goal = true;
+    }
+}
+
+void turn() {
+    strategy[x][y][d] = TURN;
+    seen[x][y][d] = true;
+    d = (d + 1) % 4;
+}</declaration>
+		<location id="id0" x="297" y="-102">
+		</location>
+		<init ref="id0"/>
+		<transition id="id1">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="306" y="-195">(getAction() == TURN || getAction() == ANY) &amp;&amp; t == turn_time &amp;&amp; battery &gt;= 1</label>
+			<label kind="assignment" x="433" y="-51">turn(), t = 0, battery -= 1, turnc += 1</label>
+			<nail x="416" y="-42"/>
+			<nail x="408" y="-161"/>
+		</transition>
+		<transition id="id2">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-136" y="-25">(getAction() == FORWARD || getAction() == ANY) &amp;&amp; t == move_time &amp;&amp; battery &gt;= 1</label>
+			<label kind="assignment" x="-25" y="-178">move(),t = 0, battery -= 1, movec += 1</label>
+			<nail x="178" y="-153"/>
+			<nail x="187" y="-42"/>
+		</transition>
+	</template>
+	<system>rob = Robot(0,0);
+
+system rob;</system>
+	<queries>
+		<option key="--diagnostic" value="2"/>
+		<query>
+			<formula>E&lt;&gt; 
+rob.x == 0 &amp;&amp;
+rob.y == 0 &amp;&amp;
+rob.d == 0 &amp;&amp;
+movec &gt; 12 &amp;&amp;
+turnc &gt; 12 &amp;&amp;
+
+forall(i:int[0,n-1])
+forall(j:int[0,n-1])
+rob.visited[i][j]</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2026-05-07 20:48:01 +0000">
+				<option key="--diagnostic" value="2"/>
+			</result>
+		</query>
+	</queries>
+</nta>

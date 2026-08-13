@@ -1,4 +1,4 @@
-from vec import Vec
+from trufal.vec import Vec
 
 
 def secret_function(u, v, w):

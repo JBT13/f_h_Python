@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+int n = 1;
+const int k = 5;</declaration>
+	<template>
+		<name x="5" y="5">Template</name>
+		<declaration>// Place local declarations here.
+int count = 0;
+int r = 0;</declaration>
+		<location id="id0" x="0" y="0">
+		</location>
+		<location id="id1" x="8" y="170">
+		</location>
+		<location id="id2" x="255" y="102">
+		</location>
+		<location id="id3" x="59" y="-144">
+			<name x="49" y="-178">done</name>
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="119" y="17">n = r, count += 1</label>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="93" y="153">r = r + n</label>
+		</transition>
+		<transition id="id6">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="4" y="51">count &lt; k</label>
+			<label kind="assignment" x="-42" y="85">r = n</label>
+		</transition>
+		<transition id="id7">
+			<source ref="id0"/>
+			<target ref="id3"/>
+			<label kind="guard" x="59" y="-93">k == count</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+P1 = Template();
+P2 = Template();
+// List one or more processes to be composed into a system.
+system P1, P2;
+</system>
+	<queries>
+		<option key="--diagnostic" value="1"/>
+		<query>
+			<formula>E&lt;&gt; (n ==  23)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2026-04-29 11:07:03 +0000">
+				<option key="--diagnostic" value="1"/>
+			</result>
+		</query>
+	</queries>
+</nta>

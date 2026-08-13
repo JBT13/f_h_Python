@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>const int n = 6;
+int[0,20] grid[n][n];
+
+clock total_time;
+
+//const int FORWARD = 0;
+//const int BACKWARD = 1;
+//const int ANY = 2;
+
+bool canMove(int id, int x, int y, int dx, int dy, int len, bool horiz) {
+
+    if (horiz) {
+        int nextX = (dx &gt; 0) ? x + len : x - 1;
+        return nextX &gt;= 0 &amp;&amp; nextX &lt; n &amp;&amp; grid[y][nextX] == 0;
+
+    } else {
+        int nextY = (dy &gt; 0) ? y + len : y - 1;
+        return nextY &gt;= 0 &amp;&amp; nextY &lt; n &amp;&amp; grid[nextY][x] == 0;
+    }
+}
+
+void place_car(int id, int x, int y, int len, bool horiz) {
+    int i;
+    for (i = 0; i &lt; len; i++) {
+        if (horiz) grid[y][x + i] = id;
+        else       grid[y + i][x] = id;
+    }
+}</declaration>
+	<template>
+		<name>verticalCar</name>
+		<parameter>int id, int length, int x, int y</parameter>
+		<location id="id0" x="1" y="16">
+		</location>
+		<location id="id1" x="-8" y="-255">
+			<urgent/>
+		</location>
+		<location id="id2" x="8" y="187">
+			<committed/>
+		</location>
+		<init ref="id2"/>
+		<transition id="id3">
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="59" y="110">place_car(id, x, y, length, false)</label>
+		</transition>
+		<transition id="id4">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-365" y="-85">canMove(id,x,y,0,-1,length,false)</label>
+			<label kind="assignment" x="-475" y="-119">grid[y+length-1][x] = 0, y--, grid[y][x] = id</label>
+			<nail x="-101" y="-119"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="94" y="-77">canMove(id,x,y,0,1,length,false)</label>
+			<label kind="assignment" x="120" y="-136">grid[y][x] = 0, y++, grid[y+length-1][x] = id</label>
+			<nail x="94" y="-119"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id0"/>
+			<target ref="id1"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">horizontalCar</name>
+		<parameter>int id, int length, int x, int y</parameter>
+		<location id="id7" x="595" y="51">
+			<urgent/>
+		</location>
+		<location id="id8" x="272" y="51">
+		</location>
+		<location id="id9" x="59" y="51">
+			<committed/>
+		</location>
+		<init ref="id9"/>
+		<transition id="id10">
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="assignment" x="-85" y="76">place_car(id, x, y, length, true)</label>
+		</transition>
+		<transition id="id11">
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="289" y="-51">canMove(id,x,y,-1,0,length,true)</label>
+			<label kind="assignment" x="212" y="-76">grid[y][x+length-1] = 0, x--, grid[y][x] = id</label>
+			<nail x="425" y="-8"/>
+		</transition>
+		<transition id="id12">
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="331" y="136">canMove(id,x,y,1,0,length,true)</label>
+			<label kind="assignment" x="280" y="170">grid[y][x] = 0, x++, grid[y][x+length-1] = id</label>
+			<nail x="433" y="119"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id8"/>
+			<target ref="id7"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+red = horizontalCar(1, 1, 3, 3); 
+truc = verticalCar(2, 3, 0, 0);
+truc1 = verticalCar(3, 3, 5, 3);
+truc2 = verticalCar(4, 2, 3, 0);
+// List one or more processes to be composed into a system.
+system red,truc,truc1,truc2;</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>

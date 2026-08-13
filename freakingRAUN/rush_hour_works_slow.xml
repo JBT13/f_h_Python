@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>const int n = 6;
+clock total_time;
+
+int[0,20] grid[n][n];
+
+bool canMove(int id, int x, int y, int dx, int dy, int len, bool horiz) {
+    if (horiz) {
+        int nextX = (dx &gt; 0) ? x + len : x - 1;
+        return nextX &gt;= 0 &amp;&amp; nextX &lt; n &amp;&amp; grid[y][nextX] == 0;
+    } else {
+        int nextY = (dy &gt; 0) ? y + len : y - 1;
+        return nextY &gt;= 0 &amp;&amp; nextY &lt; n &amp;&amp; grid[nextY][x] == 0;
+    }
+}
+
+void place_car(int id, int len, int x, int y, bool horiz) {
+    int i;
+    for (i = 0; i &lt; len; i++) {
+        if (horiz &amp;&amp; x + i &lt; n) grid[y][x + i] = id;
+        else if (!horiz &amp;&amp; y + i &lt; n) grid[y + i][x] = id;
+    }
+}
+
+void move_car(int id, int x, int y, int dx, int dy, int len, bool horiz) {
+    if (horiz) {
+        if (dx &gt; 0 &amp;&amp; x+len &lt; n)   { grid[y][x] = 0;      grid[y][x+len] = id;   }
+        else if (dx &lt; 0 &amp;&amp; x-1 &gt;= 0) { grid[y][x+len-1] = 0; grid[y][x-1] = id;  }
+    } else {
+        if (dy &gt; 0 &amp;&amp; y+len &lt; n)   { grid[y][x] = 0;      grid[y+len][x] = id;   }
+        else if (dy &lt; 0 &amp;&amp; y-1 &gt;= 0) { grid[y+len-1][x] = 0; grid[y-1][x] = id;  }
+    }
+}</declaration>
+	<template>
+		<name>initializer</name>
+		<declaration>void place_all() {
+    place_car(1,  2, 3, 2, true);   // red
+    place_car(2,  2, 0, 0, true);   // green
+    place_car(3,  2, 2, 0, true);   // orange
+    place_car(4,  2, 4, 0, false);  // blue
+    place_car(5,  2, 2, 1, false);  // pink
+    place_car(6,  3, 5, 1, false);  // yellow
+    place_car(7,  2, 1, 2, false);  // purple
+    place_car(8,  3, 0, 3, false);  // magenta
+    place_car(9,  2, 3, 3, true);   // darkgreen
+    place_car(10, 2, 3, 4, false);  // gray
+    place_car(11, 2, 4, 4, true);   // beige
+    place_car(12, 2, 1, 5, true);   // brown
+    place_car(13, 2, 4, 5, true);   // black
+}</declaration>
+		<location id="id0" x="0" y="0">
+			<committed/>
+		</location>
+		<location id="id1" x="0" y="-136">
+		</location>
+		<init ref="id0"/>
+		<transition id="id2">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="17" y="-76">place_all()</label>
+		</transition>
+	</template>
+	<template>
+		<name>verticalCar</name>
+		<parameter>int id, int length, int x, int y</parameter>
+		<location id="id3" x="1" y="16">
+		</location>
+		<location id="id4" x="-8" y="-255">
+			<urgent/>
+		</location>
+		<init ref="id3"/>
+		<transition id="id5">
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-433" y="-68">canMove(id, x, y, 0, -1, length, false)</label>
+			<label kind="assignment" x="-459" y="-212">move_car(id, x, y, 0, -1, length, false), y--</label>
+			<nail x="-101" y="-119"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="guard" x="119" y="-59">canMove(id, x, y, 0, 1, length, false)</label>
+			<label kind="assignment" x="119" y="-119">move_car(id, x, y, 0, 1, length, false), y++</label>
+			<nail x="94" y="-119"/>
+		</transition>
+		<transition id="id7">
+			<source ref="id3"/>
+			<target ref="id4"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">horizontalCar</name>
+		<parameter>int id, int length, int x, int y</parameter>
+		<location id="id8" x="595" y="51">
+			<urgent/>
+		</location>
+		<location id="id9" x="272" y="51">
+		</location>
+		<init ref="id9"/>
+		<transition id="id10">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="guard" x="289" y="-51">canMove(id, x, y, -1, 0, length, true)</label>
+			<label kind="assignment" x="238" y="-76">move_car(id, x, y, -1, 0, length, true), x--</label>
+			<nail x="425" y="-8"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="guard" x="331" y="136">canMove(id, x, y, 1, 0, length, true)</label>
+			<label kind="assignment" x="280" y="170">move_car(id, x, y, 1, 0, length, true), x++</label>
+			<nail x="433" y="119"/>
+		</transition>
+		<transition id="id12">
+			<source ref="id9"/>
+			<target ref="id8"/>
+		</transition>
+	</template>
+	<system>Init = initializer();
+red       = horizontalCar(1,  2, 3, 2);
+green     = horizontalCar(2,  2, 0, 0);
+orange    = horizontalCar(3,  2, 2, 0);
+blue      = verticalCar  (4,  2, 4, 0);
+pink      = verticalCar  (5,  2, 2, 1);
+yellow    = verticalCar  (6,  3, 5, 1);
+purple    = verticalCar  (7,  2, 1, 2);
+magenta   = verticalCar  (8,  3, 0, 3);
+darkgreen = horizontalCar(9,  2, 3, 3);
+gray      = verticalCar  (10, 2, 3, 4);
+beige     = horizontalCar(11, 2, 4, 4);
+brown     = horizontalCar(12, 2, 1, 5);
+black     = horizontalCar(13, 2, 4, 5);
+
+system Init, red, green, orange, blue, pink, yellow,
+       purple, magenta, darkgreen, gray, beige, brown, black;</system>
+	<queries>
+		<option key="--diagnostic" value="1"/>
+		<query>
+			<formula>E&lt;&gt; red.x == 4</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2026-05-12 12:10:16 +0000">
+				<option key="--diagnostic" value="1"/>
+			</result>
+		</query>
+	</queries>
+</nta>

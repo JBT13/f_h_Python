@@ -1,6 +1,6 @@
 from matutil import coldict2mat
 from solver import solve
-from vec import Vec
+from trufal.vec import Vec
 
 
 EPS = 1e-14

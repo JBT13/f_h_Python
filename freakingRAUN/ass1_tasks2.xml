@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Cordinates
+//int[0,2] x = 0;
+//int[0,2] y = 0;
+// Orientation
+
+clock total_time;
+// square visited
+bool allVisited = false;
+
+int[0,1] fail = 0;
+
+bool visited[3][3] = {{0,0,0}, {0,0,0}, {0,0,0}};
+
+
+const int FORWARD = 0;
+const int TURN = 1;
+const int BOUNDS = -1;
+
+
+// New Constants
+const int UNSEEN = -1;
+const int ANY = 2; // Represents "Free Will"
+
+
+int memory[3][3][4] = {
+    {{-1,-1,-1,-1}, {-1,-1,-1,-1}, {-1,-1,-1,-1}},
+    {{-1,-1,-1,-1}, {-1,-1,-1,-1}, {-1,-1,-1,-1}},
+    {{-1,-1,-1,-1}, {-1,-1,-1,-1}, {-1,-1,-1,-1}}
+};
+</declaration>
+	<template>
+		<name x="5" y="5">Robot</name>
+		<parameter>int x, int y, int d, int goalX, int goalY</parameter>
+		<declaration>// Place local declarations here.
+
+int battery = 100;
+clock t;
+bool dead = false;
+
+//int[0,3] d;
+
+// Memory Array: [x][y][d]. Initialized to -1 (UNSEEN)
+bool pathComplete = false;
+
+int movec = 0;
+int turnc = 0;
+
+
+bool wall() {
+    if (d == 0 &amp;&amp; y == 2) return true; // Wall at North
+    if (d == 1 &amp;&amp; x == 2) return true; // Wall at East
+    if (d == 2 &amp;&amp; y == 0) return true; // Wall at South
+    if (d == 3 &amp;&amp; x == 0) return true; // Wall at West
+    return false;
+}
+
+int getAction() {
+    // 2. FIXED PATH (First time through)
+    //if (x == 0 &amp;&amp; y == 0 &amp;&amp; d == 0) return FORWARD;
+    //if (x == 0 &amp;&amp; y == 1 &amp;&amp; d == 0) return FORWARD;
+    //if (x == 0 &amp;&amp; y == 2 &amp;&amp; d == 0) return TURN;
+    //if (x == 0 &amp;&amp; y == 2 &amp;&amp; d == 1) return FORWARD;
+    
+        // 3. REACTIVE BOUNDARIES
+    if (wall()) {
+        return TURN; // No free will into a wall!
+    }
+
+    if (memory[x][y][d] != UNSEEN) {
+        return memory[x][y][d]; // Return the exact action it took last time
+    }
+
+    // 4. FREE WILL
+    // If it's safe and unseen, let UPPAAL test both moving and turning.
+    return ANY; 
+}
+
+bool goal = false;
+
+void move() {
+    memory[x][y][d] = FORWARD;
+
+    if (d == 0) y++;
+    else if (d == 1) x++;
+    else if (d == 2) y--;
+    else if (d == 3) x--;
+
+    visited[x][y] = true;
+    if (x == goalX  &amp;&amp; y == goalY) goal = true;
+
+    allVisited = 
+    visited[0][0] &amp;&amp; visited[0][1] &amp;&amp; visited[0][2] &amp;&amp;
+    visited[1][0] &amp;&amp; visited[1][1] &amp;&amp; visited[1][2] &amp;&amp;
+    visited[2][0] &amp;&amp; visited[2][1] &amp;&amp; visited[2][2];
+}
+
+void turn() {
+    memory[x][y][d] = TURN;
+    d = (d + 1) % 4;      // 90-degree right turn
+}</declaration>
+		<location id="id0" x="297" y="-102">
+		</location>
+		<init ref="id0"/>
+		<transition id="id1">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="306" y="-229">t &gt; 1 &amp;&amp; !goal</label>
+			<label kind="assignment" x="93" y="-238">fail = 1, dead = true</label>
+			<nail x="331" y="-195"/>
+			<nail x="263" y="-195"/>
+		</transition>
+		<transition id="id2">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="399" y="-195">(getAction() == TURN || getAction() == ANY) &amp;&amp; t == 1 &amp;&amp; battery &gt;= 1 &amp;&amp; !dead</label>
+			<label kind="assignment" x="416" y="-34">turn(), t = 0, battery -= 1, turnc += 1</label>
+			<nail x="416" y="-42"/>
+			<nail x="408" y="-161"/>
+		</transition>
+		<transition id="id3">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-357" y="-42">(getAction() == FORWARD || getAction() == ANY) &amp;&amp; t == 5 &amp;&amp; battery &gt;= 1 &amp;&amp; !dead</label>
+			<label kind="assignment" x="-59" y="-178">move(),t = 0, battery -= 1, movec += 1</label>
+			<nail x="178" y="-153"/>
+			<nail x="187" y="-42"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+rob = Robot(0,0,0, 0,0);
+rob2 = Robot(2,2,2, 2,2);
+// com = Compass();
+// List one or more processes to be composed into a system.
+system rob,rob2;
+</system>
+	<queries>
+		<option key="--diagnostic" value="2"/>
+		<query>
+			<formula>E&lt;&gt; 
+ allVisited &amp;&amp; !rob.dead &amp;&amp; !rob2.dead &amp;&amp; rob.d == 0 &amp;&amp; rob2.d == 2</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2026-05-07 13:29:58 +0000">
+				<option key="--diagnostic" value="2"/>
+			</result>
+		</query>
+	</queries>
+</nta>

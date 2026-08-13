@@ -1,6 +1,6 @@
 # Copyright 2013 Philip N. Klein
-from vec import Vec
-from mat import Mat
+from trufal.vec import Vec
+from trufal.mat import Mat
 
 
 def row_reduce(rowlist):
