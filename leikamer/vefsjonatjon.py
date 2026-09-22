@@ -8,29 +8,24 @@ web = []
 for _ in range(n):
     a,b,c = input().split()
     if a == "J":
-        cpu.append(a)
+        cpu.append(1)
 
     if b == "J":
-        memory.append(b) 
+        memory.append(1) 
 
     if c == "J":
-        web.append(c)
+        web.append(1)
 
-if len(cpu) == 0 or len(memory) == 0 or len(web) == 0:
-    print(0)
+total = 0
+for item in range(n):
+    try:
+        total += memory.pop()
+        total += cpu.pop()
+        total += web.pop()
 
-if len(cpu) == len(memory) and len(memory) == len(web) and len(web) == len(cpu):
-    print(len(cpu))
+    except:
+        break
 
-if len(cpu) == len(memory) and len(memory) != len(web):
-    print(len(web))
-
-if len(cpu) != len(memory) and len(memory) == len(web):
-    print(len(cpu))
-
-if len(cpu) == len(web) and len(memory) != len(web):
-    print(len(memory))
-
-
+print(total//3)
    
     

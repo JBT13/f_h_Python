@@ -1,4 +1,4 @@
-from fixarray import FixedSizeArray
+xfrom fixarray import FixedSizeArray
 import collections
 from collections.abc import Iterable
 
